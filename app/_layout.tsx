@@ -1,5 +1,34 @@
-import { Stack } from "expo-router";
+import { SplashScreen, Stack } from 'expo-router';
+
+import { useEffect } from 'react';
+import { useFonts } from 'expo-font';
+
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  return <Stack />;
+  const [loaded, error] = useFonts({
+    'Afacad-Bold': require('../assets/fonts/Afacad-Bold.ttf'),
+    'Afacad-Medium': require('../assets/fonts/Afacad-Medium.ttf'),
+    'Afacad-Regular': require('../assets/fonts/Afacad-Regular.ttf'),
+    'Afacad-SemiBold': require('../assets/fonts/Afacad-SemiBold.ttf'),
+    'AlbertSans-SemiBold': require('../assets/fonts/AlbertSans-SemiBold.ttf'),
+  });
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
+
+  return (
+    <Stack>
+      <Stack.Screen name='index' options={{ headerShown: false }} />
+      <Stack.Screen name='habits' options={{ headerShown: false }} />
+    </Stack>
+  );
 }
