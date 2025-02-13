@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   primary: {
-    backgroundColor: Colors.mainWhite,
+    backgroundColor: Colors.secondaryWhite,
   },
   positive: {
     backgroundColor: Colors.green,
