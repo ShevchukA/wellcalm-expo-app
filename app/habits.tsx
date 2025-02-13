@@ -1,7 +1,8 @@
+import { Colors, HabitsColors } from '@/constants/Colors';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import AddButton from '@/components/AddButton';
-import { Colors } from '@/constants/Colors';
+import HabitCard from '@/components/HabitCard';
 
 export default function Habits() {
   const handleAdd = () => {
@@ -15,7 +16,11 @@ export default function Habits() {
           <Text style={styles.title}>YOUR HABITS</Text>
         </View>
         <ScrollView style={styles.scrollContainer} alwaysBounceVertical={false}>
-          <Text>Your Habits</Text>
+          <HabitCard title='Изучение русского' color={HabitsColors[0]} />
+          <HabitCard title='Study russian' color={HabitsColors[1]} />
+          <HabitCard title='test' color={HabitsColors[2]} />
+          <HabitCard title='test' color={HabitsColors[3]} />
+          <View style={styles.spacer}></View>
         </ScrollView>
         <View style={styles.footer}>
           <AddButton onPress={handleAdd} />
@@ -43,12 +48,15 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: 'black',
+    paddingHorizontal: 16,
   },
   footer: {
-    height: 76,
+    height: 106,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 6,
+  },
+  spacer: {
+    height: 14,
   },
 });

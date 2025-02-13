@@ -13,6 +13,8 @@ export default function RootLayout() {
     'Afacad-Regular': require('../assets/fonts/Afacad-Regular.ttf'),
     'Afacad-SemiBold': require('../assets/fonts/Afacad-SemiBold.ttf'),
     'AlbertSans-SemiBold': require('../assets/fonts/AlbertSans-SemiBold.ttf'),
+    'Jost-Regular': require('../assets/fonts/Jost-Regular.ttf'),
+    'Jost-SemiBold': require('../assets/fonts/Jost-SemiBold.ttf'),
   });
 
   useEffect(() => {
