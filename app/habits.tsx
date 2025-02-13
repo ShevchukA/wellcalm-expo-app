@@ -1,8 +1,16 @@
 import { Colors, HabitsColors } from '@/constants/Colors';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 import AddButton from '@/components/AddButton';
 import HabitCard from '@/components/HabitCard';
+import { StatusBar } from 'expo-status-bar';
 
 export default function Habits() {
   const handleAdd = () => {

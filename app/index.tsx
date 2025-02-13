@@ -3,6 +3,7 @@ import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import Button from '@/components/Button';
 import { Colors } from '@/constants/Colors';
+import { StatusBar } from 'expo-status-bar';
 
 export default function Index() {
   const handleStart = () => {
