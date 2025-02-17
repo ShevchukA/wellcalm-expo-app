@@ -1,21 +1,30 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Colors } from '@/constants/Colors';
+import { Habit } from '@/models/models';
 import IconPencil from '../assets/icons/pencil.svg';
+import { useStore } from '@/store/store';
 
 interface HabitCardProps {
-  title: string;
+  habit: Habit;
   color: string;
-  data?: Array<number>;
 }
 
-export default function HabitCard({ title, color, data }: HabitCardProps) {
+export default function HabitCard({ habit, color }: HabitCardProps) {
+  const selectHabit = useStore((state) => state.selectHabit);
+  const toggleModal = useStore((state) => state.toggleModal);
+
+  const handleEdit = () => {
+    selectHabit(habit);
+    toggleModal();
+  };
+
   return (
     <View style={styles.cardWrapper}>
       <View style={styles.card}>
         <View style={[styles.titleContainer, { backgroundColor: color }]}>
-          <Text style={styles.title}>{title}</Text>
-          <Pressable style={styles.editButton}>
+          <Text style={styles.title}>{habit.name}</Text>
+          <Pressable style={styles.editButton} onPress={handleEdit}>
             <IconPencil />
           </Pressable>
         </View>

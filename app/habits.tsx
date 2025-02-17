@@ -10,28 +10,37 @@ import {
 
 import AddButton from '@/components/AddButton';
 import HabitCard from '@/components/HabitCard';
-import { StatusBar } from 'expo-status-bar';
+import Modal from '@/components/Modal';
+import { useStore } from '@/store/store';
 
 export default function Habits() {
-  const handleAdd = () => {
-    console.log('ADD');
+  const toggleModal = useStore((state) => state.toggleModal);
+  const isModalOpen = useStore((state) => state.isModalOpen);
+  const habits = useStore((state) => state.habits);
+
+  const handleShowModal = () => {
+    toggleModal();
   };
 
   return (
     <View style={styles.screenLayout}>
       <SafeAreaView style={styles.screenLayout}>
+        <Modal isVisible={isModalOpen} />
         <View style={styles.header}>
           <Text style={styles.title}>YOUR HABITS</Text>
         </View>
         <ScrollView style={styles.scrollContainer} alwaysBounceVertical={false}>
-          <HabitCard title='Изучение русского' color={HabitsColors[0]} />
-          <HabitCard title='Study russian' color={HabitsColors[1]} />
-          <HabitCard title='test' color={HabitsColors[2]} />
-          <HabitCard title='test' color={HabitsColors[3]} />
+          {habits.map((habit, i) => (
+            <HabitCard
+              key={habit.id}
+              habit={habit}
+              color={HabitsColors[i % HabitsColors.length]}
+            />
+          ))}
           <View style={styles.spacer}></View>
         </ScrollView>
         <View style={styles.footer}>
-          <AddButton onPress={handleAdd} />
+          <AddButton onPress={handleShowModal} />
         </View>
       </SafeAreaView>
     </View>
