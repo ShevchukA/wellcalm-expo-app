@@ -10,7 +10,6 @@ import {
 
 import AddButton from '@/components/AddButton';
 import DeleteAction from '@/components/DeleteAction';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import HabitCard from '@/components/HabitCard';
 import Modal from '@/components/Modal';
 import { SwipeListView } from 'react-native-swipe-list-view';
