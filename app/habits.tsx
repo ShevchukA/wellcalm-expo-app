@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import AddButton from '@/components/AddButton';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import HabitCard from '@/components/HabitCard';
 import Modal from '@/components/Modal';
 import { useStore } from '@/store/store';
@@ -24,25 +25,32 @@ export default function Habits() {
 
   return (
     <View style={styles.screenLayout}>
-      <SafeAreaView style={styles.screenLayout}>
-        <Modal isVisible={isModalOpen} />
-        <View style={styles.header}>
-          <Text style={styles.title}>YOUR HABITS</Text>
-        </View>
-        <ScrollView style={styles.scrollContainer} alwaysBounceVertical={false}>
-          {habits.map((habit, i) => (
-            <HabitCard
-              key={habit.id}
-              habit={habit}
-              color={HabitsColors[i % HabitsColors.length]}
-            />
-          ))}
-          <View style={styles.spacer}></View>
-        </ScrollView>
-        <View style={styles.footer}>
-          <AddButton onPress={handleShowModal} />
-        </View>
-      </SafeAreaView>
+      <GestureHandlerRootView>
+        <SafeAreaView style={styles.screenLayout}>
+          <Modal isVisible={isModalOpen} />
+          <View style={styles.header}>
+            <Text style={styles.title}>YOUR HABITS</Text>
+          </View>
+
+          <ScrollView
+            style={styles.scrollContainer}
+            alwaysBounceVertical={false}
+          >
+            {habits.map((habit, i) => (
+              <HabitCard
+                key={habit.id}
+                habit={habit}
+                color={HabitsColors[i % HabitsColors.length]}
+              />
+            ))}
+            <View style={styles.spacer}></View>
+          </ScrollView>
+
+          <View style={styles.footer}>
+            <AddButton onPress={handleShowModal} />
+          </View>
+        </SafeAreaView>
+      </GestureHandlerRootView>
     </View>
   );
 }
@@ -65,7 +73,6 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
-    paddingHorizontal: 16,
   },
   footer: {
     height: 106,
