@@ -9,9 +9,11 @@ import {
 } from 'react-native';
 
 import AddButton from '@/components/AddButton';
+import DeleteAction from '@/components/DeleteAction';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import HabitCard from '@/components/HabitCard';
 import Modal from '@/components/Modal';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import { useStore } from '@/store/store';
 
 export default function Habits() {
@@ -25,32 +27,40 @@ export default function Habits() {
 
   return (
     <View style={styles.screenLayout}>
-      <GestureHandlerRootView>
-        <SafeAreaView style={styles.screenLayout}>
-          <Modal isVisible={isModalOpen} />
-          <View style={styles.header}>
-            <Text style={styles.title}>YOUR HABITS</Text>
-          </View>
+      <SafeAreaView style={styles.screenLayout}>
+        <Modal isVisible={isModalOpen} />
+        <View style={styles.header}>
+          <Text style={styles.title}>YOUR HABITS</Text>
+        </View>
+        <SwipeListView
+          data={habits}
+          keyExtractor={(habit) => habit.id}
+          renderItem={(data) => (
+            <HabitCard
+              habit={data.item}
+              color={HabitsColors[data.index % HabitsColors.length]}
+            />
+          )}
+          renderHiddenItem={(data) => <DeleteAction habitID={data.item.id} />}
+          rightOpenValue={-66}
+          alwaysBounceVertical={false}
+        />
 
-          <ScrollView
-            style={styles.scrollContainer}
-            alwaysBounceVertical={false}
-          >
-            {habits.map((habit, i) => (
-              <HabitCard
-                key={habit.id}
-                habit={habit}
-                color={HabitsColors[i % HabitsColors.length]}
-              />
-            ))}
-            <View style={styles.spacer}></View>
-          </ScrollView>
+        {/* <ScrollView style={styles.scrollContainer} alwaysBounceVertical={false}>
+          {habits.map((habit, i) => (
+            <HabitCard
+              key={habit.id}
+              habit={habit}
+              color={HabitsColors[i % HabitsColors.length]}
+            />
+          ))} 
+          <View style={styles.spacer}></View>
+        </ScrollView>*/}
 
-          <View style={styles.footer}>
-            <AddButton onPress={handleShowModal} />
-          </View>
-        </SafeAreaView>
-      </GestureHandlerRootView>
+        <View style={styles.footer}>
+          <AddButton onPress={handleShowModal} />
+        </View>
+      </SafeAreaView>
     </View>
   );
 }

@@ -1,46 +1,36 @@
-import Reanimated, {
-  Extrapolation,
-  SharedValue,
-  interpolate,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+import { Animated, Pressable } from 'react-native';
 
 import BinIcon from '../assets/icons/trash-bin.svg';
-import { Pressable } from 'react-native';
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import { useStore } from '@/store/store';
 
 interface DeleteActionProps {
-  dragX: SharedValue<number>;
-  onDelete: () => void;
+  habitID: string;
 }
 
-function DeleteAction({ dragX, onDelete }: DeleteActionProps) {
-  const animatedStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      dragX.value,
-      [-66, 0],
-      [1, 0],
-      Extrapolation.CLAMP
-    );
-    return { opacity };
-  });
+function DeleteAction({ habitID }: DeleteActionProps) {
+  const deleteHabit = useStore((state) => state.deleteHabit);
+
+  const handleDelete = () => {
+    deleteHabit(habitID);
+  };
 
   return (
-    <Reanimated.View style={[styles.deleteActionContainer, animatedStyle]}>
-      <Pressable style={styles.deleteButton} onPress={onDelete}>
+    <Animated.View style={[styles.deleteActionContainer]}>
+      <Pressable style={styles.deleteButton} onPress={handleDelete}>
         <BinIcon />
       </Pressable>
-    </Reanimated.View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   deleteActionContainer: {
-    width: 66,
+    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    paddingRight: 16,
+    alignItems: 'flex-end',
+    paddingRight: 26,
   },
   deleteButton: {
     width: 40,

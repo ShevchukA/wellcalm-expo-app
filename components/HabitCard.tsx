@@ -1,14 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import ReanimatedSwipeable, {
-  SwipeableMethods,
-} from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 import { Colors } from '@/constants/Colors';
-import DeleteAction from './DeleteAction';
 import { Habit } from '@/models/models';
 import IconPencil from '../assets/icons/pencil.svg';
-import { SharedValue } from 'react-native-reanimated';
-import { useRef } from 'react';
 import { useStore } from '@/store/store';
 
 interface HabitCardProps {
@@ -19,49 +13,28 @@ interface HabitCardProps {
 export default function HabitCard({ habit, color }: HabitCardProps) {
   const selectHabit = useStore((state) => state.selectHabit);
   const toggleModal = useStore((state) => state.toggleModal);
-  const deleteHabit = useStore((state) => state.deleteHabit);
-  const swipeableRef = useRef<SwipeableMethods>(null);
 
   const handleEdit = () => {
-    swipeableRef.current?.close();
     selectHabit(habit);
     toggleModal();
   };
 
-  const handleDelete = () => {
-    deleteHabit(habit.id);
-  };
-
-  const renderRightActions = (
-    progress: SharedValue<number>,
-    dragX: SharedValue<number>
-  ) => {
-    return <DeleteAction dragX={dragX} onDelete={handleDelete} />;
-  };
-
   return (
-    <ReanimatedSwipeable
-      renderRightActions={renderRightActions}
-      ref={swipeableRef}
-      friction={2}
-      overshootRight={false}
-    >
-      <View style={styles.cardWrapper}>
-        <View style={styles.card}>
-          <View style={[styles.titleContainer, { backgroundColor: color }]}>
-            <Text style={styles.title}>{habit.name}</Text>
-            <Pressable style={styles.editButton} onPress={handleEdit}>
-              <IconPencil />
-            </Pressable>
-          </View>
-          <View style={styles.trackerContainer}>
-            {/* {data.map((item) => (
+    <View style={styles.cardWrapper}>
+      <View style={styles.card}>
+        <View style={[styles.titleContainer, { backgroundColor: color }]}>
+          <Text style={styles.title}>{habit.name}</Text>
+          <Pressable style={styles.editButton} onPress={handleEdit}>
+            <IconPencil />
+          </Pressable>
+        </View>
+        <View style={styles.trackerContainer}>
+          {/* {data.map((item) => (
             <Text key={item}>{item}</Text>
           ))} */}
-          </View>
         </View>
       </View>
-    </ReanimatedSwipeable>
+    </View>
   );
 }
 
