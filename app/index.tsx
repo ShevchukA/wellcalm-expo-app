@@ -1,9 +1,8 @@
-import { Link, router } from 'expo-router';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import Button from '@/components/Button';
 import { Colors } from '@/constants/Colors';
-import { StatusBar } from 'expo-status-bar';
+import { router } from 'expo-router';
 
 export default function Index() {
   const handleStart = () => {

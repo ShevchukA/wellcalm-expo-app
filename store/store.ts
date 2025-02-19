@@ -9,6 +9,7 @@ export interface Store {
   addHabit: (habit: Habit) => void;
   deleteHabit: (id: string) => void;
   editHabitName: (id: string, newName: string) => void;
+  checkDate: (habitId: string, date: string) => void;
   selectHabit: (habit: Habit | null) => void;
   toggleModal: () => void;
 }
@@ -37,6 +38,27 @@ export const useStore = create<Store>((set) => {
         const newHabits = [...state.habits];
         newHabits[index] = { ...newHabits[index], name: newName };
         return { habits: newHabits };
+      }),
+
+    checkDate: (habitId, date) =>
+      set((state) => {
+        return {
+          habits: state.habits.map((habit) => {
+            if (habit.id !== habitId) {
+              return habit;
+            }
+
+            const updatedHabitDates = [...habit.dates];
+            const index = habit.dates.findIndex((item) => item === date);
+            if (index !== -1) {
+              updatedHabitDates.splice(index, 1);
+            } else {
+              updatedHabitDates.push(date);
+            }
+
+            return { ...habit, dates: updatedHabitDates };
+          }),
+        };
       }),
 
     toggleModal: () => set((state) => ({ isModalOpen: !state.isModalOpen })),

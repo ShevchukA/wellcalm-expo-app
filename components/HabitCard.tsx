@@ -3,6 +3,13 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { Habit } from '@/models/models';
 import IconPencil from '../assets/icons/pencil.svg';
+import TrackerButton from './TrackerButton';
+import { WEEK_DAYS } from '@/constants/WeekDays';
+import { getCurrentDate } from '@/utils/getCurrentDate';
+import getCurrentMonthYear from '@/utils/getCurrentMonthYear';
+import { getCurrentWeekDates } from '@/utils/getCurrentWeekDays';
+import { router } from 'expo-router';
+import { useMemo } from 'react';
 import { useStore } from '@/store/store';
 
 interface HabitCardProps {
@@ -19,6 +26,14 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
     toggleModal();
   };
 
+  const handleOpenCalendar = () => {
+    router.navigate('/calendar');
+  };
+
+  const currentDate = useMemo(() => getCurrentDate(), []);
+  const currentMonth = useMemo(() => getCurrentMonthYear(), []);
+  const currentWeekDates = useMemo(() => getCurrentWeekDates(), []);
+
   return (
     <View style={styles.cardWrapper}>
       <View style={styles.card}>
@@ -29,9 +44,39 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
           </Pressable>
         </View>
         <View style={styles.trackerContainer}>
-          {/* {data.map((item) => (
-            <Text key={item}>{item}</Text>
-          ))} */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.linkContainer,
+              pressed && styles.linkContainerPressed,
+            ]}
+            onPress={handleOpenCalendar}
+          >
+            <Text style={styles.link}>{currentMonth}</Text>
+            <Text style={styles.icon}>{'>'}</Text>
+          </Pressable>
+
+          <View style={styles.pickerContainer}>
+            <View style={styles.daysContainer}>
+              {WEEK_DAYS.map((day) => (
+                <Text key={day} style={styles.weekDay}>
+                  {day}
+                </Text>
+              ))}
+            </View>
+            <View style={styles.datesContainer}>
+              {currentWeekDates.map((date: string) => (
+                <TrackerButton
+                  key={date}
+                  habitId={habit.id}
+                  date={date}
+                  isMarked={
+                    habit.dates.find((item) => item === date) ? true : false
+                  }
+                  isCurrentDate={date === currentDate}
+                />
+              ))}
+            </View>
+          </View>
         </View>
       </View>
     </View>
@@ -74,6 +119,50 @@ const styles = StyleSheet.create({
   trackerContainer: {
     flex: 1,
     backgroundColor: Colors.white,
+    paddingTop: 16,
+    paddingBottom: 22,
+    paddingHorizontal: 16,
+  },
+  linkContainer: {
+    height: 44,
+    gap: 4,
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  linkContainerPressed: {
+    opacity: 0.6,
+  },
+  link: {
+    fontFamily: 'Afacad-SemiBold',
+    fontSize: 20,
+    color: Colors.black,
+  },
+  icon: {
+    fontFamily: 'Afacad-SemiBold',
+    fontSize: 17,
+    color: Colors.tertiaryBlue,
+  },
+  pickerContainer: {},
+  daysContainer: {
+    flexDirection: 'row',
+    gap: 4,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  weekDay: {
+    width: 44,
+    fontFamily: 'Afacad-SemiBold',
+    fontSize: 13,
+    color: '#3C3C434D',
+    textAlign: 'center',
+  },
+  datesContainer: {
+    flexDirection: 'row',
+    gap: 4,
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   deleteActionContainer: {
     width: 66,

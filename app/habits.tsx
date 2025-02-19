@@ -1,12 +1,5 @@
 import { Colors, HabitsColors } from '@/constants/Colors';
-import {
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import AddButton from '@/components/AddButton';
 import DeleteAction from '@/components/DeleteAction';
@@ -76,8 +69,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontFamily: 'AlbertSans-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Afacad-Semibold',
+    fontSize: 18,
     color: Colors.black,
   },
   scrollContainer: {
