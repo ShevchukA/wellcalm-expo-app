@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontFamily: 'Afacad-Semibold',
-    fontSize: 18,
+    fontFamily: 'Jost-SemiBold',
+    fontSize: 16,
     color: Colors.black,
   },
   scrollContainer: {

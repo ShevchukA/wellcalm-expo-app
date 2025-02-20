@@ -13,6 +13,7 @@ export const Colors = {
   lightGreen: '#A3E89A',
   black: '#000000',
   white: '#ffffff',
+  pink: '#E1CECE',
 };
 
 export const HabitsColors = [

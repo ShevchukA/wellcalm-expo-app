@@ -24,7 +24,10 @@ export default function Modal({ isVisible }: ModalProps) {
   const addHabit = useStore((state) => state.addHabit);
   const editHabitName = useStore((state) => state.editHabitName);
   const selectHabit = useStore((state) => state.selectHabit);
-  const selectedHabit = useStore((state) => state.selectedHabit);
+  // TODO store selector for current habit
+  const habits = useStore((state) => state.habits);
+  const selectedHabitId = useStore((state) => state.selectedHabitId);
+  const selectedHabit = habits.find((habit) => habit.id === selectedHabitId);
 
   const [name, setName] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
@@ -51,7 +54,7 @@ export default function Modal({ isVisible }: ModalProps) {
       return;
     }
 
-    if (selectedHabit !== null) {
+    if (selectedHabit) {
       editHabitName(selectedHabit.id, name);
     } else {
       const newHabit: Habit = {

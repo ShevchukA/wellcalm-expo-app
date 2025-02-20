@@ -6,7 +6,7 @@ import { Habit } from '@/models/models';
 import IconPencil from '../assets/icons/pencil.svg';
 import TrackerButton from './TrackerButton';
 import { getCurrentDate } from '@/utils/getCurrentDate';
-import getCurrentMonthYear from '@/utils/getCurrentMonthYear';
+import { getCurrentMonthYear } from '@/utils/getCurrentMonthYear';
 import { getCurrentWeekDates } from '@/utils/getCurrentWeekDays';
 import { router } from 'expo-router';
 import { useMemo } from 'react';

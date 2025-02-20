@@ -5,7 +5,7 @@ import { setAsyncStorageData } from '@/utils/setAsyncStorageData';
 
 export interface Store {
   habits: Habit[];
-  selectedHabit: Habit | null;
+  selectedHabitId: string | null;
   isModalOpen: boolean;
 
   loadHabitsFromAsyncStore: () => void;
@@ -21,7 +21,7 @@ export interface Store {
 export const useStore = create<Store>((set) => {
   return {
     habits: [],
-    selectedHabit: null,
+    selectedHabitId: null,
     isModalOpen: false,
 
     loadHabitsFromAsyncStore: async () => {
@@ -82,6 +82,6 @@ export const useStore = create<Store>((set) => {
 
     toggleModal: () => set((state) => ({ isModalOpen: !state.isModalOpen })),
 
-    selectHabit: (habit) => set(() => ({ selectedHabit: habit })),
+    selectHabit: (habit) => set(() => ({ selectedHabitId: habit?.id })),
   };
 });
