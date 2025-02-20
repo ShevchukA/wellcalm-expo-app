@@ -138,8 +138,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
   trackerContainer: {
-    marginTop: 4,
-    paddingHorizontal: 4,
+    marginTop: 6,
     gap: 4,
   },
   week: {
