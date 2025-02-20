@@ -2,6 +2,7 @@ import { SplashScreen, Stack } from 'expo-router';
 
 import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
+import { useStore } from '@/store/store';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -16,6 +17,14 @@ export default function RootLayout() {
     'Jost-Regular': require('../assets/fonts/Jost-Regular.ttf'),
     'Jost-SemiBold': require('../assets/fonts/Jost-SemiBold.ttf'),
   });
+
+  const loadHabitsFromAsyncStore = useStore(
+    (state) => state.loadHabitsFromAsyncStore
+  );
+
+  useEffect(() => {
+    loadHabitsFromAsyncStore();
+  }, []);
 
   useEffect(() => {
     if (loaded) {

@@ -24,6 +24,7 @@ export default function Habits() {
         <View style={styles.header}>
           <Text style={styles.title}>YOUR HABITS</Text>
         </View>
+
         <SwipeListView
           data={habits}
           keyExtractor={(habit) => habit.id}
@@ -37,17 +38,6 @@ export default function Habits() {
           rightOpenValue={-66}
           alwaysBounceVertical={false}
         />
-
-        {/* <ScrollView style={styles.scrollContainer} alwaysBounceVertical={false}>
-          {habits.map((habit, i) => (
-            <HabitCard
-              key={habit.id}
-              habit={habit}
-              color={HabitsColors[i % HabitsColors.length]}
-            />
-          ))} 
-          <View style={styles.spacer}></View>
-        </ScrollView>*/}
 
         <View style={styles.footer}>
           <AddButton onPress={handleShowModal} />

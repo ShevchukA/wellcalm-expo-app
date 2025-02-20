@@ -1,10 +1,10 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Colors } from '@/constants/Colors';
+import DaysOfWeek from './DaysOfWeek';
 import { Habit } from '@/models/models';
 import IconPencil from '../assets/icons/pencil.svg';
 import TrackerButton from './TrackerButton';
-import { WEEK_DAYS } from '@/constants/WeekDays';
 import { getCurrentDate } from '@/utils/getCurrentDate';
 import getCurrentMonthYear from '@/utils/getCurrentMonthYear';
 import { getCurrentWeekDates } from '@/utils/getCurrentWeekDays';
@@ -27,6 +27,7 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
   };
 
   const handleOpenCalendar = () => {
+    selectHabit(habit);
     router.navigate('/calendar');
   };
 
@@ -56,13 +57,7 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
           </Pressable>
 
           <View style={styles.pickerContainer}>
-            <View style={styles.daysContainer}>
-              {WEEK_DAYS.map((day) => (
-                <Text key={day} style={styles.weekDay}>
-                  {day}
-                </Text>
-              ))}
-            </View>
+            <DaysOfWeek />
             <View style={styles.datesContainer}>
               {currentWeekDates.map((date: string) => (
                 <TrackerButton
@@ -145,19 +140,6 @@ const styles = StyleSheet.create({
     color: Colors.tertiaryBlue,
   },
   pickerContainer: {},
-  daysContainer: {
-    flexDirection: 'row',
-    gap: 4,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  weekDay: {
-    width: 44,
-    fontFamily: 'Afacad-SemiBold',
-    fontSize: 13,
-    color: '#3C3C434D',
-    textAlign: 'center',
-  },
   datesContainer: {
     flexDirection: 'row',
     gap: 4,

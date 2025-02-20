@@ -17,7 +17,6 @@ export default function TrackerButton({
   isMarked,
   habitId,
 }: TrackerButtonProps) {
-  //   const [isMarked, setIsMarked] = useState(false);
   const checkDate = useStore((state) => state.checkDate);
 
   const handlePress = () => {
