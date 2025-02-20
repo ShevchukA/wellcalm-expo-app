@@ -1,17 +1,19 @@
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
-import { Calendar as CalendarList } from '../components/Calendar';
+import Calendar from '../components/Calendar';
 import { Colors } from '@/constants/Colors';
 import { router } from 'expo-router';
 import { useStore } from '@/store/store';
 
-export default function Calendar() {
+export default function Month() {
   // TODO store selector for current habit
+  const selectHabit = useStore((state) => state.selectHabit);
   const habits = useStore((state) => state.habits);
   const selectedHabitId = useStore((state) => state.selectedHabitId);
   const selectedHabit = habits.find((habit) => habit.id === selectedHabitId);
 
   const handleBack = () => {
+    selectHabit(null);
     router.back();
   };
 
@@ -26,7 +28,7 @@ export default function Calendar() {
         </View>
 
         <View style={styles.carouselContainer}>
-          {selectedHabit && <CalendarList month={1} habit={selectedHabit} />}
+          {selectedHabit && <Calendar month={1} habit={selectedHabit} />}
         </View>
       </SafeAreaView>
     </View>

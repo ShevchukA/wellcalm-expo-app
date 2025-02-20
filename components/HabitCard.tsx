@@ -1,13 +1,12 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { getCurrentDate, getCurrentMonthYear } from '@/utils/getDate';
 
 import { Colors } from '@/constants/Colors';
 import DaysOfWeek from './DaysOfWeek';
 import { Habit } from '@/models/models';
 import IconPencil from '../assets/icons/pencil.svg';
 import TrackerButton from './TrackerButton';
-import { getCurrentDate } from '@/utils/getCurrentDate';
-import { getCurrentMonthYear } from '@/utils/getCurrentMonthYear';
-import { getCurrentWeekDates } from '@/utils/getCurrentWeekDays';
+import { getCurrentWeekDates } from '@/utils/getCurrentWeekDates';
 import { router } from 'expo-router';
 import { useMemo } from 'react';
 import { useStore } from '@/store/store';
@@ -28,7 +27,7 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
 
   const handleOpenCalendar = () => {
     selectHabit(habit);
-    router.navigate('/calendar');
+    router.navigate('/month');
   };
 
   const currentDate = useMemo(() => getCurrentDate(), []);
@@ -88,7 +87,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   card: {
-    height: 194,
     borderRadius: 20,
     overflow: 'hidden',
   },
@@ -114,9 +112,8 @@ const styles = StyleSheet.create({
   trackerContainer: {
     flex: 1,
     backgroundColor: Colors.white,
-    paddingTop: 16,
-    paddingBottom: 22,
     paddingHorizontal: 16,
+    paddingBottom: 24,
   },
   linkContainer: {
     height: 44,
@@ -125,6 +122,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    marginVertical: 6,
   },
   linkContainerPressed: {
     opacity: 0.6,

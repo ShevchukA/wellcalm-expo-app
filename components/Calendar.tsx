@@ -1,23 +1,25 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { useMemo, useState } from 'react';
+import { getCurrentDate, getCurrentYear } from '@/utils/getDate';
 
 import { Colors } from '@/constants/Colors';
 import DaysOfWeek from './DaysOfWeek';
 import { Habit } from '@/models/models';
+import { MONTHS } from '@/constants/Months';
 import TrackerButton from './TrackerButton';
 import { chunkArray } from '@/utils/chunkArray';
-import { getCurrentDate } from '@/utils/getCurrentDate';
+import { countDatesInMonth } from '@/utils/countDays';
 import { getDatesOfMonth } from '@/utils/getDatesOfMonth';
+import { getLongestStreakForMonth } from '@/utils/getStreak';
 
 interface CalendarProps {
-  month: number;
   habit: Habit;
+  // year: number;
+  month: number; // index, 0 - January
 }
 
-export function Calendar({ month, habit }: CalendarProps) {
-  const [year, setYear] = useState(2025);
-
-  const currentDate = useMemo(() => getCurrentDate(), []);
+export default function Calendar({ month, habit }: CalendarProps) {
+  const currentDate = getCurrentDate(); // "YYYY-MM-DD"
+  const year = Number(getCurrentYear());
 
   const firstDate = new Date(year, month, 1); // первая дата месяца
   const firstDayOfWeek = firstDate.getDay(); // вернёт число от 0 (вс) до 6 (сб)
@@ -44,13 +46,19 @@ export function Calendar({ month, habit }: CalendarProps) {
   // Разбиваем по 7 элементов (дни недели)
   const weeks = chunkArray(calendarCells, 7);
 
+  // Считаем отмеченные дни за месяц
+  const checkedDates = countDatesInMonth(habit.dates, year, month);
+  const streak = getLongestStreakForMonth(habit.dates, year, month);
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.card}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>February 2025</Text>
+          <Text style={styles.title}>{year}</Text>
         </View>
         <View style={styles.mainContainer}>
+          <Text style={styles.title}>{MONTHS[month]}</Text>
+
           <View style={styles.trackerContainer}>
             <DaysOfWeek />
             {weeks.map((week, i) => (
@@ -73,6 +81,16 @@ export function Calendar({ month, habit }: CalendarProps) {
               </View>
             ))}
           </View>
+
+          <View style={styles.separator} />
+          <View style={styles.infoContainer}>
+            <Text style={styles.title}>Total per month</Text>
+            <Text style={styles.text}>{checkedDates} days</Text>
+          </View>
+          <View style={styles.infoContainer}>
+            <Text style={styles.title}>Best streak</Text>
+            <Text style={styles.markedText}>{streak} days</Text>
+          </View>
         </View>
       </View>
     </View>
@@ -82,7 +100,7 @@ export function Calendar({ month, habit }: CalendarProps) {
 const styles = StyleSheet.create({
   wrapper: {
     width: '100%',
-    height: 554,
+    height: 554, // TODO ?
     paddingHorizontal: 16,
   },
   card: {
@@ -103,25 +121,44 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Colors.black,
   },
+  text: {
+    fontFamily: 'Afacad-Regular',
+    fontSize: 20,
+    color: Colors.black,
+  },
+  markedText: {
+    fontFamily: 'Afacad-Semibold',
+    fontSize: 20,
+    color: Colors.tertiaryBlue,
+  },
   mainContainer: {
-    borderWidth: 1,
     flex: 1,
     backgroundColor: Colors.white,
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 12,
   },
   trackerContainer: {
-    borderWidth: 1,
-    paddingHorizontal: 6,
+    marginTop: 4,
+    paddingHorizontal: 4,
     gap: 4,
   },
   week: {
     flexDirection: 'row',
-    gap: 4,
+    gap: 2,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   calendarSpacer: {
     width: 44,
     height: 44,
+  },
+  separator: {
+    borderTopWidth: 1,
+    borderColor: Colors.pink,
+    marginVertical: 16,
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
