@@ -17,7 +17,6 @@ export default function DaysOfWeek() {
 const styles = StyleSheet.create({
   daysContainer: {
     flexDirection: 'row',
-    gap: 2,
     justifyContent: 'space-between',
     alignItems: 'center',
   },

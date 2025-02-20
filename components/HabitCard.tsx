@@ -140,7 +140,6 @@ const styles = StyleSheet.create({
   pickerContainer: {},
   datesContainer: {
     flexDirection: 'row',
-    gap: 4,
     justifyContent: 'space-between',
     alignItems: 'center',
   },

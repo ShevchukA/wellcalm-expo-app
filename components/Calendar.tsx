@@ -144,7 +144,6 @@ const styles = StyleSheet.create({
   },
   week: {
     flexDirection: 'row',
-    gap: 2,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
