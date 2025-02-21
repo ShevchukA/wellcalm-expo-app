@@ -1,7 +1,11 @@
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import Calendar from '../components/Calendar';
+import CarouselIndicator from '@/components/CarouselIndicator';
 import { Colors } from '@/constants/Colors';
+import { MONTHS } from '@/constants/Months';
+import PagerView from 'react-native-pager-view';
+import { getCurrentMonth } from '@/utils/getDate';
 import { router } from 'expo-router';
 import { useStore } from '@/store/store';
 
@@ -11,6 +15,8 @@ export default function Month() {
   const habits = useStore((state) => state.habits);
   const selectedHabitId = useStore((state) => state.selectedHabitId);
   const selectedHabit = habits.find((habit) => habit.id === selectedHabitId);
+  const currentMonth = getCurrentMonth();
+  const currentMonthIndex = MONTHS.findIndex((month) => month === currentMonth);
 
   const handleBack = () => {
     selectHabit(null);
@@ -27,9 +33,18 @@ export default function Month() {
           <Text style={styles.title}>{selectedHabit?.name}</Text>
         </View>
 
-        <View style={styles.carouselContainer}>
-          {selectedHabit && <Calendar month={1} habit={selectedHabit} />}
-        </View>
+        {selectedHabit && currentMonthIndex !== -1 && (
+          <PagerView
+            style={styles.carouselContainer}
+            initialPage={currentMonthIndex}
+          >
+            {MONTHS.map((month, i) => (
+              <Calendar key={month} month={i} habit={selectedHabit} />
+            ))}
+          </PagerView>
+        )}
+
+        <CarouselIndicator />
       </SafeAreaView>
     </View>
   );
@@ -38,7 +53,7 @@ export default function Month() {
 const styles = StyleSheet.create({
   screenLayout: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     backgroundColor: Colors.mainWhite,
   },
   header: {
@@ -69,9 +84,12 @@ const styles = StyleSheet.create({
     color: Colors.tertiaryBlue,
   },
   carouselContainer: {
-    flex: 1,
+    // borderWidth: 1,
+    // flex: 1,
+    height: 554, // TODO ?
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: 14,
+    marginTop: 14,
+    marginBottom: 18,
   },
 });
