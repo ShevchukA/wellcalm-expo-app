@@ -5,7 +5,10 @@ export default function CarouselIndicator() {
   return (
     <View style={styles.container}>
       {slides.map((slide) => (
-        <View style={[styles.dot, (styles as any)[`dot--${slide}`]]} />
+        <View
+          key={slide}
+          style={[styles.dot, (styles as any)[`dot--${slide}`]]}
+        />
       ))}
     </View>
   );
