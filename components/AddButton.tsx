@@ -1,7 +1,6 @@
-import { Image, Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 
 import { Colors } from '@/constants/Colors';
-import { PressableProps } from 'react-native-gesture-handler';
 
 interface AddButtonProps {
   onPress: () => void;

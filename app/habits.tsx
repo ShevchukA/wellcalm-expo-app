@@ -6,6 +6,7 @@ import DeleteAction from '@/components/DeleteAction';
 import HabitCard from '@/components/HabitCard';
 import Modal from '@/components/Modal';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import Tooltip from '@/components/Tooltip';
 import { useStore } from '@/store/store';
 
 export default function Habits() {
@@ -40,7 +41,14 @@ export default function Habits() {
         />
 
         <View style={styles.footer}>
-          <AddButton onPress={handleShowModal} />
+          <Tooltip
+            isVisible={true}
+            text={'Tap to add\nthe habit'}
+            pointerDirection='down'
+            position={{ left: 38, bottom: 104 }}
+          >
+            <AddButton onPress={handleShowModal} />
+          </Tooltip>
         </View>
       </SafeAreaView>
     </View>
