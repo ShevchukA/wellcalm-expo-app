@@ -3,3 +3,7 @@ export type Habit = {
   name: string;
   dates: string[];
 };
+
+export type LaunchCounter = {
+  count: number;
+};

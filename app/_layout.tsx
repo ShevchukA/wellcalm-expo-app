@@ -1,8 +1,14 @@
 import { SplashScreen, Stack } from 'expo-router';
 
+import { checkAndPromptReview } from '@/utils/checkAndPromptReview';
 import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
 import { useStore } from '@/store/store';
+
+// TODO
+// локальные push-уведомления
+// tooltip и tutorial-store
+// ачивки
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -23,6 +29,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     loadHabitsFromAsyncStore();
+    checkAndPromptReview();
   }, []);
 
   useEffect(() => {

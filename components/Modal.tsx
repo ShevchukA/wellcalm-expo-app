@@ -76,6 +76,10 @@ export default function Modal({ isVisible }: ModalProps) {
       visible={isVisible} // necessary prop for correct animation and state management
       onRequestClose={handleClose}
     >
+      {/* <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      > */}
       <View style={styles.backdrop}>
         <View style={styles.modal}>
           <Text style={styles.label}>Name</Text>
@@ -91,6 +95,7 @@ export default function Modal({ isVisible }: ModalProps) {
           </View>
         </View>
       </View>
+      {/* </KeyboardAvoidingView> */}
     </ModalView>
   );
 }
@@ -103,10 +108,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#767F6B80',
   },
   modal: {
-    paddingHorizontal: 34,
-    paddingVertical: 25,
+    paddingHorizontal: 24,
+    paddingVertical: 24,
     backgroundColor: Colors.white,
     borderRadius: 20,
+    marginBottom: 120,
   },
   label: {
     fontFamily: 'Afacad-Regular',
