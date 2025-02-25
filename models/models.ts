@@ -7,3 +7,13 @@ export type Habit = {
 export type LaunchCounter = {
   count: number;
 };
+
+export type TutorialState = {
+  step: number;
+  steps: {
+    cellMarked: boolean;
+    calendarOpened: boolean;
+    cardDeleted: boolean;
+    cardAdded: boolean;
+  };
+};

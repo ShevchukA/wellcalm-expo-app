@@ -1,8 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Colors } from '@/constants/Colors';
-import { useState } from 'react';
 import { useStore } from '@/store/store';
+import { useTutorStore } from '@/store/tutorStore';
 
 interface TrackerButtonProps {
   date: string;
@@ -18,9 +18,17 @@ export default function TrackerButton({
   habitId,
 }: TrackerButtonProps) {
   const checkDate = useStore((state) => state.checkDate);
+  const tutorialStep = useTutorStore((state) => state.tutorial.step);
+  const nextTutorialStep = useTutorStore((state) => state.nextStep);
+  const updateStep = useTutorStore((state) => state.updateStep);
 
   const handlePress = () => {
     checkDate(habitId, date);
+
+    if (tutorialStep === 0) {
+      nextTutorialStep();
+      updateStep('cellMarked', true);
+    }
   };
 
   return (

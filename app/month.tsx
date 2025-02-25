@@ -8,6 +8,7 @@ import PagerView from 'react-native-pager-view';
 import { getCurrentMonth } from '@/utils/getDate';
 import { router } from 'expo-router';
 import { useStore } from '@/store/store';
+import { useTutorStore } from '@/store/tutorStore';
 
 export default function Month() {
   // TODO store selector for current habit
@@ -18,9 +19,16 @@ export default function Month() {
   const currentMonth = getCurrentMonth();
   const currentMonthIndex = MONTHS.findIndex((month) => month === currentMonth);
 
+  const tutorialStep = useTutorStore((state) => state.tutorial.step);
+  const nextTutorialStep = useTutorStore((state) => state.nextStep);
+
   const handleBack = () => {
     selectHabit(null);
     router.back();
+
+    if (tutorialStep === 1) {
+      nextTutorialStep();
+    }
   };
 
   return (

@@ -1,4 +1,3 @@
-import { Href, Link } from 'expo-router';
 import { Pressable, StyleSheet, Text } from 'react-native';
 
 import { Colors } from '@/constants/Colors';

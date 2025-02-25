@@ -2,6 +2,7 @@ import { Habit } from '@/models/models';
 import { create } from 'zustand';
 import { getAsyncStorageData } from '@/utils/getAsyncStorageData';
 import { setAsyncStorageData } from '@/utils/setAsyncStorageData';
+import { tutorHabit } from '@/models/tutorHabit';
 
 export interface Store {
   habits: Habit[];
@@ -20,14 +21,14 @@ export interface Store {
 // TODO: is it a good idea to operate with local store from my app store?
 export const useStore = create<Store>((set) => {
   return {
-    habits: [],
+    habits: [tutorHabit],
     selectedHabitId: null,
     isModalOpen: false,
 
     loadHabitsFromAsyncStore: async () => {
-      const newHabits = await getAsyncStorageData('habits');
+      const newHabits = await getAsyncStorageData<Habit[]>('habits');
       if (newHabits) {
-        set(() => ({ habits: newHabits as Habit[] }));
+        set(() => ({ habits: newHabits }));
       }
     },
 

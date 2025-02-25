@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   },
   position: {
     position: 'absolute',
+    zIndex: 10,
   },
   tooltip: {
     flex: 0,
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Afacad-Regular',
     fontSize: 16,
     lineHeight: 16,
+    textAlign: 'center',
     color: Colors.black,
   },
   arrowTop: {

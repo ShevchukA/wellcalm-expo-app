@@ -4,6 +4,7 @@ import { checkAndPromptReview } from '@/utils/checkAndPromptReview';
 import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
 import { useStore } from '@/store/store';
+import { useTutorStore } from '@/store/tutorStore';
 
 // TODO
 // локальные push-уведомления
@@ -27,8 +28,13 @@ export default function RootLayout() {
     (state) => state.loadHabitsFromAsyncStore
   );
 
+  const loadTutorialFromAsyncStore = useTutorStore(
+    (state) => state.loadTutorialFromAsyncStore
+  );
+
   useEffect(() => {
-    loadHabitsFromAsyncStore();
+    // loadHabitsFromAsyncStore(); // TODO
+    // loadTutorialFromAsyncStore();
     checkAndPromptReview();
   }, []);
 

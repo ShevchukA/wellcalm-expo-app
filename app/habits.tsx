@@ -8,20 +8,37 @@ import Modal from '@/components/Modal';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import Tooltip from '@/components/Tooltip';
 import { useStore } from '@/store/store';
+import { useTutorStore } from '@/store/tutorStore';
 
 export default function Habits() {
   const toggleModal = useStore((state) => state.toggleModal);
   const isModalOpen = useStore((state) => state.isModalOpen);
   const habits = useStore((state) => state.habits);
+  const tutorial = useTutorStore((state) => state.tutorial);
+  const nextTutorialStep = useTutorStore((state) => state.nextStep);
+  const updateStep = useTutorStore((state) => state.updateStep);
 
   const handleShowModal = () => {
     toggleModal();
+
+    if (tutorial.step <= 3) {
+      updateStep('cardAdded', true);
+    }
+
+    if (tutorial.step === 0) {
+      nextTutorialStep();
+      updateStep('cellMarked', true);
+    }
+
+    if (tutorial.step === 3) {
+      nextTutorialStep();
+    }
   };
 
   return (
     <View style={styles.screenLayout}>
+      <Modal isVisible={isModalOpen} />
       <SafeAreaView style={styles.screenLayout}>
-        <Modal isVisible={isModalOpen} />
         <View style={styles.header}>
           <Text style={styles.title}>YOUR HABITS</Text>
         </View>
@@ -42,7 +59,7 @@ export default function Habits() {
 
         <View style={styles.footer}>
           <Tooltip
-            isVisible={true}
+            isVisible={tutorial.step === 3 && !tutorial.steps.cardAdded}
             text={'Tap to add\nthe habit'}
             pointerDirection='down'
             position={{ left: 38, bottom: 104 }}

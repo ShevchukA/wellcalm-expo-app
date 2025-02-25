@@ -5,11 +5,13 @@ import { Colors } from '@/constants/Colors';
 import DaysOfWeek from './DaysOfWeek';
 import { Habit } from '@/models/models';
 import IconPencil from '../assets/icons/pencil.svg';
+import Tooltip from './Tooltip';
 import TrackerButton from './TrackerButton';
 import { getCurrentWeekDates } from '@/utils/getCurrentWeekDates';
 import { router } from 'expo-router';
 import { useMemo } from 'react';
 import { useStore } from '@/store/store';
+import { useTutorStore } from '@/store/tutorStore';
 
 interface HabitCardProps {
   habit: Habit;
@@ -19,6 +21,10 @@ interface HabitCardProps {
 export default function HabitCard({ habit, color }: HabitCardProps) {
   const selectHabit = useStore((state) => state.selectHabit);
   const toggleModal = useStore((state) => state.toggleModal);
+
+  const tutorialStep = useTutorStore((state) => state.tutorial.step);
+  const nextTutorialStep = useTutorStore((state) => state.nextStep);
+  const updateStep = useTutorStore((state) => state.updateStep);
 
   const handleEdit = () => {
     selectHabit(habit);
@@ -34,42 +40,79 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
   const currentMonth = useMemo(() => getCurrentMonthYear(), []);
   const currentWeekDates = useMemo(() => getCurrentWeekDates(), []);
 
+  const isTutorCard = habit.id === 'tutorial';
+
   return (
     <View style={styles.cardWrapper}>
-      <View style={styles.card}>
-        <View style={[styles.titleContainer, { backgroundColor: color }]}>
-          <Text style={styles.title}>{habit.name}</Text>
-          <Pressable style={styles.editButton} onPress={handleEdit}>
-            <IconPencil />
-          </Pressable>
+      {isTutorCard && (
+        <View style={styles.tutorContainer}>
+          <Text style={styles.tutorLabel}>how about new habit?</Text>
         </View>
-        <View style={styles.trackerContainer}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.linkContainer,
-              pressed && styles.linkContainerPressed,
+      )}
+
+      <View style={[styles.card]}>
+        <Tooltip
+          isVisible={tutorialStep === 2 && isTutorCard}
+          text={'Swipe left\nto delete'}
+          pointerDirection='top'
+          position={{ left: 226, top: 120 }}
+        >
+          <View
+            style={[
+              styles.titleContainer,
+              { backgroundColor: color },
+              isTutorCard && styles.tutorCard,
             ]}
-            onPress={handleOpenCalendar}
           >
-            <Text style={styles.link}>{currentMonth}</Text>
-            <Text style={styles.icon}>{'>'}</Text>
-          </Pressable>
+            <Text style={styles.title}>{habit.name}</Text>
+            <Pressable style={styles.editButton} onPress={handleEdit}>
+              <IconPencil />
+            </Pressable>
+          </View>
+        </Tooltip>
+
+        <View style={styles.trackerContainer}>
+          <Tooltip
+            isVisible={tutorialStep === 1 && isTutorCard}
+            text={'Tap to open the full\ncalendar'}
+            pointerDirection='top'
+            position={{ left: 90, top: 66 }}
+          >
+            <Pressable
+              style={({ pressed }) => [
+                styles.linkContainer,
+                pressed && styles.linkContainerPressed,
+              ]}
+              onPress={handleOpenCalendar}
+            >
+              <Text style={styles.link}>{currentMonth}</Text>
+              <Text style={styles.icon}>{'>'}</Text>
+            </Pressable>
+          </Tooltip>
 
           <View style={styles.pickerContainer}>
             <DaysOfWeek />
-            <View style={styles.datesContainer}>
-              {currentWeekDates.map((date: string) => (
-                <TrackerButton
-                  key={date}
-                  habitId={habit.id}
-                  date={date}
-                  isMarked={
-                    habit.dates.find((item) => item === date) ? true : false
-                  }
-                  isCurrentDate={date === currentDate}
-                />
-              ))}
-            </View>
+
+            <Tooltip
+              isVisible={tutorialStep === 0 && isTutorCard}
+              text={'Tap to mark the day,\ntap to unmark'}
+              pointerDirection='top'
+              position={{ left: 26, top: 72 }}
+            >
+              <View style={styles.datesContainer}>
+                {currentWeekDates.map((date: string) => (
+                  <TrackerButton
+                    key={date}
+                    habitId={habit.id}
+                    date={date}
+                    isMarked={
+                      habit.dates.find((item) => item === date) ? true : false
+                    }
+                    isCurrentDate={date === currentDate}
+                  />
+                ))}
+              </View>
+            </Tooltip>
           </View>
         </View>
       </View>
@@ -85,10 +128,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
+    position: 'relative',
   },
   card: {
-    borderRadius: 20,
-    overflow: 'hidden',
+    // borderRadius: 20,
+    // overflow: 'hidden',
+  },
+  tutorCard: {
+    borderTopLeftRadius: 0,
+    marginTop: 20,
   },
   titleContainer: {
     height: 54,
@@ -97,6 +145,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingRight: 10,
     paddingLeft: 16,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   title: {
     fontFamily: 'Jost-Regular',
@@ -114,6 +164,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingHorizontal: 16,
     paddingBottom: 24,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   linkContainer: {
     height: 44,
@@ -154,5 +206,20 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  tutorContainer: {
+    height: 38,
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: '#D9E2CF',
+    position: 'absolute',
+    paddingHorizontal: 16,
+    top: -4,
+    zIndex: -1,
+  },
+  tutorLabel: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
+    color: '#5C5959',
   },
 });
