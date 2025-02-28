@@ -8,7 +8,6 @@ import { useTutorStore } from '@/store/tutorStore';
 
 // TODO
 // локальные push-уведомления
-// tooltip и tutorial-store
 // ачивки
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -53,6 +52,7 @@ export default function RootLayout() {
       <Stack.Screen name='index' options={{ headerShown: false }} />
       <Stack.Screen name='habits' options={{ headerShown: false }} />
       <Stack.Screen name='month' options={{ headerShown: false }} />
+      <Stack.Screen name='year' options={{ headerShown: false }} />
     </Stack>
   );
 }

@@ -11,5 +11,6 @@ export function getDatesOfMonth(year: number, month: number): string[] {
     (_, i) => new Date(year, month, i + 1).toISOString().split('T')[0]
   );
 
+  // TODO check
   return datesArray;
 }

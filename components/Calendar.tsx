@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { getCurrentDate, getCurrentYear } from '@/utils/getDate';
 
 import { Colors } from '@/constants/Colors';
@@ -10,6 +10,7 @@ import { chunkArray } from '@/utils/chunkArray';
 import { countDatesInMonth } from '@/utils/countDays';
 import { getDatesOfMonth } from '@/utils/getDatesOfMonth';
 import { getLongestStreakForMonth } from '@/utils/getStreak';
+import { router } from 'expo-router';
 
 interface CalendarProps {
   habit: Habit;
@@ -50,12 +51,23 @@ export default function Calendar({ month, habit }: CalendarProps) {
   const checkedDates = countDatesInMonth(habit.dates, year, month);
   const streak = getLongestStreakForMonth(habit.dates, year, month);
 
+  const handlePress = () => {
+    router.navigate('/year');
+  };
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.card}>
-        <View style={styles.titleContainer}>
+        <Pressable
+          style={({ pressed }) => [
+            styles.titleContainer,
+            pressed && styles.pressed,
+          ]}
+          onPress={handlePress}
+        >
           <Text style={styles.title}>{year}</Text>
-        </View>
+          <Text style={styles.icon}>{'>'}</Text>
+        </Pressable>
         <View style={styles.mainContainer}>
           <Text style={styles.title}>{MONTHS[month]}</Text>
 
@@ -113,6 +125,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    gap: 4,
     paddingHorizontal: 16,
     backgroundColor: Colors.pink,
   },
@@ -120,6 +133,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Afacad-Semibold',
     fontSize: 20,
     color: Colors.black,
+  },
+  icon: {
+    fontFamily: 'Afacad-Semibold',
+    fontSize: 20,
+    color: Colors.tertiaryBlue,
+  },
+  pressed: {
+    opacity: 0.7,
   },
   text: {
     fontFamily: 'Afacad-Regular',

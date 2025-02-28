@@ -34,7 +34,13 @@ export default function TrackerButton({
   return (
     <Pressable style={styles.wrapper} onPress={handlePress}>
       <View style={[styles.button, isMarked && styles.marked]}>
-        <Text style={[styles.date, isCurrentDate && styles.currentDate]}>
+        <Text
+          style={[
+            styles.date,
+            isCurrentDate && styles.currentDate,
+            isMarked && isCurrentDate && styles.currentMarkedDate,
+          ]}
+        >
           {date.split('-')[2]}
         </Text>
       </View>
@@ -69,4 +75,5 @@ const styles = StyleSheet.create({
   currentDate: {
     color: Colors.tertiaryBlue,
   },
+  currentMarkedDate: { color: Colors.white },
 });
