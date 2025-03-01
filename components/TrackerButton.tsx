@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Colors } from '@/constants/Colors';
+import { checkForAchievement } from '@/utils/checkForAchievement';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 
@@ -28,6 +29,7 @@ export default function TrackerButton({
 
   const handlePress = () => {
     checkDate(habitId, year, month, date);
+    checkForAchievement();
 
     if (tutorialStep === 0) {
       nextTutorialStep();

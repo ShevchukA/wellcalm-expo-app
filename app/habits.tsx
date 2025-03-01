@@ -6,13 +6,15 @@ import DeleteAction from '@/components/DeleteAction';
 import HabitCard from '@/components/HabitCard';
 import Modal from '@/components/Modal';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import { Toast } from '@/components/Toast';
 import Tooltip from '@/components/Tooltip';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
+import { useUiStore } from '@/store/uiStore';
 
 export default function Habits() {
-  const toggleModal = useStore((state) => state.toggleModal);
-  const isModalOpen = useStore((state) => state.isModalOpen);
+  const toggleModal = useUiStore((state) => state.toggleModal);
+  const isModalOpen = useUiStore((state) => state.isModalOpen);
   const habits = useStore((state) => state.habits);
   const tutorial = useTutorStore((state) => state.tutorial);
   const nextTutorialStep = useTutorStore((state) => state.nextStep);
@@ -38,7 +40,10 @@ export default function Habits() {
   return (
     <View style={styles.screenLayout}>
       <Modal isVisible={isModalOpen} />
+
       <SafeAreaView style={styles.screenLayout}>
+        <Toast />
+
         <View style={styles.header}>
           <Text style={styles.title}>YOUR HABITS</Text>
         </View>
@@ -77,6 +82,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     backgroundColor: Colors.mainWhite,
+    position: 'relative',
   },
   header: {
     height: 44,

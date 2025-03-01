@@ -12,6 +12,7 @@ import { router } from 'expo-router';
 import { useMemo } from 'react';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
+import { useUiStore } from '@/store/uiStore';
 
 interface HabitCardProps {
   habit: Habit;
@@ -20,7 +21,7 @@ interface HabitCardProps {
 
 export default function HabitCard({ habit, color }: HabitCardProps) {
   const selectHabit = useStore((state) => state.selectHabit);
-  const toggleModal = useStore((state) => state.toggleModal);
+  const toggleModal = useUiStore((state) => state.toggleModal);
 
   const tutorialStep = useTutorStore((state) => state.tutorial.step);
 

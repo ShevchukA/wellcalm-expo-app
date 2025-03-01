@@ -14,13 +14,14 @@ import { Colors } from '@/constants/Colors';
 import { Habit } from '@/models/models';
 import { v4 as generateId } from 'uuid';
 import { useStore } from '@/store/store';
+import { useUiStore } from '@/store/uiStore';
 
 interface ModalProps {
   isVisible: boolean;
 }
 
 export default function Modal({ isVisible }: ModalProps) {
-  const toggleModal = useStore((state) => state.toggleModal);
+  const toggleModal = useUiStore((state) => state.toggleModal);
   const addHabit = useStore((state) => state.addHabit);
   const editHabitName = useStore((state) => state.editHabitName);
   const selectHabit = useStore((state) => state.selectHabit);
