@@ -34,7 +34,10 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
     router.navigate('/month');
   };
 
-  const { year, month, date } = useMemo(() => getCurrentDate(), []);
+  const { year, month, date, currentFullDate } = useMemo(
+    () => getCurrentDate(),
+    []
+  );
   const currentWeekDates = useMemo(() => getCurrentWeekDates(), []);
 
   const isTutorCard = habit.id === 'tutorial';
@@ -116,7 +119,7 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
                       month={weekDateMonth}
                       date={weekDateNumber}
                       isMarked={isMarked}
-                      isCurrentDate={weekDateNumber === date}
+                      isCurrentDate={weekDate === currentFullDate}
                     />
                   );
                 })}

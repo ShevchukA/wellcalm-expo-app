@@ -19,7 +19,7 @@ interface CalendarProps {
 }
 
 export default function Calendar({ year, month, habit }: CalendarProps) {
-  const { date: currentDate } = getCurrentDate(); // 'DD'
+  const { date: currentDate, currentFullDate } = getCurrentDate(); // 'DD'
   const monthIndex = MONTHS.findIndex((monthName) => monthName === month);
 
   const firstDate = new Date(Number(year), monthIndex, 1); // первая дата месяца
@@ -77,6 +77,8 @@ export default function Calendar({ year, month, habit }: CalendarProps) {
               <View key={i} style={styles.week}>
                 {week.map((date, i) => {
                   const isMarked = habit.dates?.[year]?.[month]?.[date];
+                  const fullDate = `${year}-${month}-${date}`;
+
                   return date ? (
                     <TrackerButton
                       key={i}
@@ -84,7 +86,7 @@ export default function Calendar({ year, month, habit }: CalendarProps) {
                       year={year}
                       month={month}
                       date={date}
-                      isCurrentDate={date === currentDate}
+                      isCurrentDate={fullDate === currentFullDate}
                       isMarked={isMarked}
                     />
                   ) : (

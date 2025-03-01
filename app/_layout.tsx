@@ -1,6 +1,7 @@
 import { SplashScreen, Stack } from 'expo-router';
 
 import { checkAndPromptReview } from '@/utils/checkAndPromptReview';
+import { manageNotifications } from '@/utils/manageNotifications';
 import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
 import { useStore } from '@/store/store';
@@ -32,9 +33,10 @@ export default function RootLayout() {
   );
 
   useEffect(() => {
-    // loadHabitsFromAsyncStore(); // TODO
-    // loadTutorialFromAsyncStore();
+    loadHabitsFromAsyncStore();
+    loadTutorialFromAsyncStore();
     checkAndPromptReview();
+    manageNotifications();
   }, []);
 
   useEffect(() => {
