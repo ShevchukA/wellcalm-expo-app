@@ -12,7 +12,7 @@ import { Colors } from '@/constants/Colors';
 import { MONTHS } from '@/constants/Months';
 import PagerView from 'react-native-pager-view';
 import YearList from '@/components/YearList';
-import { getCurrentYear } from '@/utils/getDate';
+import { getCurrentDate } from '@/utils/getDate';
 import { router } from 'expo-router';
 import { useStore } from '@/store/store';
 
@@ -21,7 +21,7 @@ export default function Year() {
   const habits = useStore((state) => state.habits);
   const selectedHabitId = useStore((state) => state.selectedHabitId);
   const selectedHabit = habits.find((habit) => habit.id === selectedHabitId);
-  const currentYear = getCurrentYear();
+  const { year } = getCurrentDate();
 
   const handleBack = () => {
     router.back();
@@ -46,7 +46,7 @@ export default function Year() {
               alwaysBounceVertical={false}
               style={styles.scrollContainer}
             >
-              <YearList year={Number(currentYear)} habit={selectedHabit} />
+              <YearList year={year} habit={selectedHabit} />
             </ScrollView>
           </PagerView>
         )}

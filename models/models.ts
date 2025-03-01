@@ -1,7 +1,11 @@
 export type Habit = {
   id: string;
   name: string;
-  dates: string[];
+  dates: Dates;
+};
+
+export type Dates = {
+  [year: string]: { [month: string]: { [day: string]: boolean } };
 };
 
 export type LaunchCounter = {

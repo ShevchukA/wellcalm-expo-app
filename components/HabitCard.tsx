@@ -1,5 +1,4 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { getCurrentDate, getCurrentMonthYear } from '@/utils/getDate';
 
 import { Colors } from '@/constants/Colors';
 import DaysOfWeek from './DaysOfWeek';
@@ -7,6 +6,7 @@ import { Habit } from '@/models/models';
 import IconPencil from '../assets/icons/pencil.svg';
 import Tooltip from './Tooltip';
 import TrackerButton from './TrackerButton';
+import { getCurrentDate } from '@/utils/getDate';
 import { getCurrentWeekDates } from '@/utils/getCurrentWeekDates';
 import { router } from 'expo-router';
 import { useMemo } from 'react';
@@ -23,8 +23,6 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
   const toggleModal = useStore((state) => state.toggleModal);
 
   const tutorialStep = useTutorStore((state) => state.tutorial.step);
-  const nextTutorialStep = useTutorStore((state) => state.nextStep);
-  const updateStep = useTutorStore((state) => state.updateStep);
 
   const handleEdit = () => {
     selectHabit(habit);
@@ -36,8 +34,7 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
     router.navigate('/month');
   };
 
-  const currentDate = useMemo(() => getCurrentDate(), []);
-  const currentMonth = useMemo(() => getCurrentMonthYear(), []);
+  const { year, month, date } = useMemo(() => getCurrentDate(), []);
   const currentWeekDates = useMemo(() => getCurrentWeekDates(), []);
 
   const isTutorCard = habit.id === 'tutorial';
@@ -85,7 +82,9 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
               ]}
               onPress={handleOpenCalendar}
             >
-              <Text style={styles.link}>{currentMonth}</Text>
+              <Text style={styles.link}>
+                {month} {year}
+              </Text>
               <Text style={styles.icon}>{'>'}</Text>
             </Pressable>
           </Tooltip>
@@ -100,17 +99,27 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
               position={{ left: 26, top: 72 }}
             >
               <View style={styles.datesContainer}>
-                {currentWeekDates.map((date: string) => (
-                  <TrackerButton
-                    key={date}
-                    habitId={habit.id}
-                    date={date}
-                    isMarked={
-                      habit.dates.find((item) => item === date) ? true : false
-                    }
-                    isCurrentDate={date === currentDate}
-                  />
-                ))}
+                {currentWeekDates.map((weekDate: string) => {
+                  const weekDateNumber = weekDate.split('-')[2];
+                  const weekDateMonth = weekDate.split('-')[1];
+                  const weekDateYear = weekDate.split('-')[0];
+                  const isMarked =
+                    habit.dates?.[weekDateYear]?.[weekDateMonth]?.[
+                      weekDateNumber
+                    ];
+
+                  return (
+                    <TrackerButton
+                      key={weekDate}
+                      habitId={habit.id}
+                      year={weekDateYear}
+                      month={weekDateMonth}
+                      date={weekDateNumber}
+                      isMarked={isMarked}
+                      isCurrentDate={weekDateNumber === date}
+                    />
+                  );
+                })}
               </View>
             </Tooltip>
           </View>

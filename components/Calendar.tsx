@@ -1,5 +1,4 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { getCurrentDate, getCurrentYear } from '@/utils/getDate';
 
 import { Colors } from '@/constants/Colors';
 import DaysOfWeek from './DaysOfWeek';
@@ -8,25 +7,26 @@ import { MONTHS } from '@/constants/Months';
 import TrackerButton from './TrackerButton';
 import { chunkArray } from '@/utils/chunkArray';
 import { countDatesInMonth } from '@/utils/countDays';
+import { getCurrentDate } from '@/utils/getDate';
 import { getDatesOfMonth } from '@/utils/getDatesOfMonth';
 import { getLongestStreakForMonth } from '@/utils/getStreak';
 import { router } from 'expo-router';
 
 interface CalendarProps {
   habit: Habit;
-  // year: number;
-  month: number; // index, 0 - January
+  year: string;
+  month: string; // index, 0 - January
 }
 
-export default function Calendar({ month, habit }: CalendarProps) {
-  const currentDate = getCurrentDate(); // "YYYY-MM-DD"
-  const year = Number(getCurrentYear());
+export default function Calendar({ year, month, habit }: CalendarProps) {
+  const { date: currentDate } = getCurrentDate(); // 'DD'
+  const monthIndex = MONTHS.findIndex((monthName) => monthName === month);
 
-  const firstDate = new Date(year, month, 1); // первая дата месяца
+  const firstDate = new Date(Number(year), monthIndex, 1); // первая дата месяца
   const firstDayOfWeek = firstDate.getDay(); // вернёт число от 0 (вс) до 6 (сб)
   const shift = (firstDayOfWeek + 6) % 7; // задаем смещение с учетом того, что 0 - понедельник
 
-  const datesArray = getDatesOfMonth(year, month);
+  const datesArray = getDatesOfMonth(Number(year), monthIndex);
 
   // Добавляем пустые ячейки в начало, чтобы сместить первый день месяца
   const calendarCells = [
@@ -69,22 +69,23 @@ export default function Calendar({ month, habit }: CalendarProps) {
           <Text style={styles.icon}>{'>'}</Text>
         </Pressable>
         <View style={styles.mainContainer}>
-          <Text style={styles.title}>{MONTHS[month]}</Text>
+          <Text style={styles.title}>{month}</Text>
 
           <View style={styles.trackerContainer}>
             <DaysOfWeek />
             {weeks.map((week, i) => (
               <View key={i} style={styles.week}>
                 {week.map((date, i) => {
+                  const isMarked = habit.dates?.[year]?.[month]?.[date];
                   return date ? (
                     <TrackerButton
                       key={i}
                       habitId={habit.id}
+                      year={year}
+                      month={month}
                       date={date}
                       isCurrentDate={date === currentDate}
-                      isMarked={
-                        habit.dates.find((item) => item === date) ? true : false
-                      }
+                      isMarked={isMarked}
                     />
                   ) : (
                     <View key={i} style={styles.calendarSpacer} />

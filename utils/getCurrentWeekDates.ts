@@ -1,3 +1,5 @@
+import { MONTHS } from '@/constants/Months';
+
 export const getCurrentWeekDates = (): string[] => {
   const now = new Date();
   const currentDay = now.getDay(); // День недели (0 - воскресенье, 1 - понедельник и т.д.)
@@ -11,8 +13,13 @@ export const getCurrentWeekDates = (): string[] => {
   const weekDates: string[] = [];
   for (let i = 0; i < 7; i++) {
     const weekDate = new Date(startOfWeek);
-    weekDate.setDate(startOfWeek.getDate() + i); // Добавляем дни к началу недели
-    weekDates.push(weekDate.toISOString().split('T')[0]); // Формат YYYY-MM-DD
+    weekDate.setDate(startOfWeek.getDate() + i);
+
+    const year = weekDate.getFullYear();
+    const monthName = MONTHS[weekDate.getMonth()];
+    const day = weekDate.getDate().toString().padStart(2, '0'); // если нужен формат DD
+
+    weekDates.push(`${year}-${monthName}-${day}`);
   }
 
   return weekDates;

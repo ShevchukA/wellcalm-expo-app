@@ -5,7 +5,7 @@ import CarouselIndicator from '@/components/CarouselIndicator';
 import { Colors } from '@/constants/Colors';
 import { MONTHS } from '@/constants/Months';
 import PagerView from 'react-native-pager-view';
-import { getCurrentMonth } from '@/utils/getDate';
+import { getCurrentDate } from '@/utils/getDate';
 import { router } from 'expo-router';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
@@ -16,7 +16,7 @@ export default function Month() {
   const habits = useStore((state) => state.habits);
   const selectedHabitId = useStore((state) => state.selectedHabitId);
   const selectedHabit = habits.find((habit) => habit.id === selectedHabitId);
-  const currentMonth = getCurrentMonth();
+  const { month: currentMonth, year } = getCurrentDate();
   const currentMonthIndex = MONTHS.findIndex((month) => month === currentMonth);
 
   const tutorialStep = useTutorStore((state) => state.tutorial.step);
@@ -47,7 +47,12 @@ export default function Month() {
             initialPage={currentMonthIndex}
           >
             {MONTHS.map((month, i) => (
-              <Calendar key={month} month={i} habit={selectedHabit} />
+              <Calendar
+                key={month}
+                year={year}
+                month={month}
+                habit={selectedHabit}
+              />
             ))}
           </PagerView>
         )}

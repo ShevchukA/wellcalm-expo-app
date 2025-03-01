@@ -1,28 +1,22 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { getCurrentDate, getCurrentYear } from '@/utils/getDate';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { Colors } from '@/constants/Colors';
-import DaysOfWeek from './DaysOfWeek';
 import { Habit } from '@/models/models';
 import { MONTHS } from '@/constants/Months';
-import TrackerButton from './TrackerButton';
-import { chunkArray } from '@/utils/chunkArray';
-import { countDatesInMonth } from '@/utils/countDays';
+import { countDatesInYear } from '@/utils/countDays';
+import { getCurrentDate } from '@/utils/getDate';
 import { getDatesOfMonth } from '@/utils/getDatesOfMonth';
-import { getLongestStreakForMonth } from '@/utils/getStreak';
-import { router } from 'expo-router';
+import { getLongestStreakForYear } from '@/utils/getStreak';
 
 interface YearListProps {
   habit: Habit;
-  year: number;
+  year: string;
 }
 
 export default function YearList({ habit, year }: YearListProps) {
-  const currentDate = getCurrentDate(); // "YYYY-MM-DD"
-
-  //   // Считаем отмеченные дни за месяц
-  //   const checkedDates = countDatesInMonth(habit.dates, year, month);
-  //   const streak = getLongestStreakForMonth(habit.dates, year, month);
+  // Считаем отмеченные дни за год
+  const checkedDates = countDatesInYear(habit.dates, year);
+  const streak = getLongestStreakForYear(habit.dates, year);
 
   return (
     <View style={styles.wrapper}>
@@ -33,13 +27,19 @@ export default function YearList({ habit, year }: YearListProps) {
         <View style={styles.mainContainer}>
           <View style={styles.yearContainer}>
             {MONTHS.map((month, monthIndex) => {
-              const days = getDatesOfMonth(year, monthIndex);
+              const days = getDatesOfMonth(Number(year), monthIndex);
               return (
                 <View key={month} style={styles.monthContainer}>
                   <Text style={styles.month}>{month}</Text>
                   <View style={styles.daysContainer}>
                     {days.map((day) => {
-                      return <View key={day} style={[styles.dot]}></View>;
+                      const isMarked = habit.dates?.[year]?.[month]?.[day];
+                      return (
+                        <View
+                          key={day}
+                          style={[styles.dot, isMarked && styles.markedDot]}
+                        />
+                      );
                     })}
                   </View>
                 </View>
@@ -50,11 +50,11 @@ export default function YearList({ habit, year }: YearListProps) {
           <View style={styles.separator} />
           <View style={styles.infoContainer}>
             <Text style={styles.title}>Total per year</Text>
-            <Text style={styles.text}> days</Text>
+            <Text style={styles.text}>{checkedDates} days</Text>
           </View>
           <View style={styles.infoContainer}>
             <Text style={styles.title}>Best streak</Text>
-            <Text style={styles.markedText}> days</Text>
+            <Text style={styles.markedText}>{streak} days</Text>
           </View>
         </View>
       </View>
@@ -112,7 +112,9 @@ const styles = StyleSheet.create({
     borderRadius: '50%',
     backgroundColor: Colors.lightGrey,
   },
-  // -----------
+  markedDot: {
+    backgroundColor: Colors.lightGreen,
+  },
   text: {
     fontFamily: 'Afacad-Regular',
     fontSize: 20,

@@ -1,18 +1,21 @@
+import { Dates } from '@/models/models';
+
 export function countDatesInMonth(
-  dates: string[],
-  year: number,
-  month: number
+  dates: Dates,
+  year: string,
+  month: string
 ): number {
-  return dates.filter((dateStr) => {
-    const [y, m] = dateStr.split('-'); // y - год, m - месяц
-    // Преобразуем месяц в число и сравниваем с переданным значением индекса месяца.
-    return Number(y) === year && Number(m) === month + 1;
-  }).length;
+  const countingMonth = dates?.[year]?.[month] ?? {};
+  return Object.keys(countingMonth).length;
 }
 
-export function countDatesInYear(dates: string[], year: number): number {
-  return dates.filter((dateStr) => {
-    const [y] = dateStr.split('-');
-    return Number(y) === year;
-  }).length;
+export function countDatesInYear(dates: Dates, year: string): number {
+  const countingYear = dates?.[year] ?? {};
+  let count = 0;
+
+  for (const month in countingYear) {
+    count += Object.keys(countingYear[month]).length;
+  }
+
+  return count;
 }
