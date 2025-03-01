@@ -1,4 +1,4 @@
-import { Habit } from './models';
+import { Dates, Habit } from './models';
 
 export const tutorHabit: Habit = {
   id: 'tutorial',

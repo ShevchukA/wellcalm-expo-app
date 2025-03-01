@@ -4,7 +4,6 @@ import { Colors } from '@/constants/Colors';
 import { Habit } from '@/models/models';
 import { MONTHS } from '@/constants/Months';
 import { countDatesInYear } from '@/utils/countDays';
-import { getCurrentDate } from '@/utils/getDate';
 import { getDatesOfMonth } from '@/utils/getDatesOfMonth';
 import { getLongestStreakForYear } from '@/utils/getStreak';
 

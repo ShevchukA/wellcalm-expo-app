@@ -9,7 +9,6 @@ import {
 
 import CarouselIndicator from '@/components/CarouselIndicator';
 import { Colors } from '@/constants/Colors';
-import { MONTHS } from '@/constants/Months';
 import PagerView from 'react-native-pager-view';
 import YearList from '@/components/YearList';
 import { getCurrentDate } from '@/utils/getDate';
