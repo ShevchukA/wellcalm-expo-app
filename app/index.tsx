@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     width: 341,
     height: 341,
-    borderWidth: 1,
+    paddingTop: 104,
   },
   logo: {
     fontFamily: 'Afacad-Semibold',

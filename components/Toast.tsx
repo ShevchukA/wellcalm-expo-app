@@ -1,5 +1,4 @@
 import Animated, {
-  Easing,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -68,8 +67,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Afacad-Bold',
-    fontSize: 24,
-    lineHeight: 24,
+    fontSize: 22,
+    lineHeight: 22,
     color: Colors.white,
     textAlign: 'center',
   },

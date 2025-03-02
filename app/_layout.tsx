@@ -7,10 +7,6 @@ import { useFonts } from 'expo-font';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 
-// TODO
-// локальные push-уведомления
-// ачивки
-
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 

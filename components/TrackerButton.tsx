@@ -29,7 +29,6 @@ export default function TrackerButton({
 
   const handlePress = () => {
     checkDate(habitId, year, month, date);
-    checkForAchievement();
 
     if (tutorialStep === 0) {
       nextTutorialStep();

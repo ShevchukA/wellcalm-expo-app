@@ -19,7 +19,7 @@ interface CalendarProps {
 }
 
 export default function Calendar({ year, month, habit }: CalendarProps) {
-  const { date: currentDate, currentFullDate } = getCurrentDate(); // 'DD'
+  const { currentFullDate } = getCurrentDate();
   const monthIndex = MONTHS.findIndex((monthName) => monthName === month);
 
   const firstDate = new Date(Number(year), monthIndex, 1); // первая дата месяца

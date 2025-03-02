@@ -11,7 +11,6 @@ import CarouselIndicator from '@/components/CarouselIndicator';
 import { Colors } from '@/constants/Colors';
 import PagerView from 'react-native-pager-view';
 import YearList from '@/components/YearList';
-import { getCurrentDate } from '@/utils/getDate';
 import { router } from 'expo-router';
 import { useStore } from '@/store/store';
 
@@ -20,7 +19,6 @@ export default function Year() {
   const habits = useStore((state) => state.habits);
   const selectedHabitId = useStore((state) => state.selectedHabitId);
   const selectedHabit = habits.find((habit) => habit.id === selectedHabitId);
-  const { year } = getCurrentDate();
 
   const handleBack = () => {
     router.back();
@@ -39,19 +37,23 @@ export default function Year() {
         {selectedHabit && (
           <PagerView
             style={styles.carouselContainer}
-            // initialPage={currentMonthIndex} // TODO
+            initialPage={Object.keys(selectedHabit.dates).length - 1}
           >
-            <ScrollView
-              alwaysBounceVertical={false}
-              style={styles.scrollContainer}
-            >
-              <YearList year={year} habit={selectedHabit} />
-            </ScrollView>
+            {Object.keys(selectedHabit.dates).map((year) => (
+              <ScrollView
+                key={year}
+                alwaysBounceVertical={false}
+                style={styles.scrollContainer}
+              >
+                <YearList year={year} habit={selectedHabit} />
+              </ScrollView>
+            ))}
           </PagerView>
         )}
 
-        {/* TODO */}
-        <CarouselIndicator />
+        {selectedHabit && Object.keys(selectedHabit.dates).length > 1 && (
+          <CarouselIndicator />
+        )}
       </SafeAreaView>
     </View>
   );

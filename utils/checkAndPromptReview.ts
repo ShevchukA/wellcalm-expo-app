@@ -27,7 +27,6 @@ export const checkAndPromptReview = async (): Promise<void> => {
   const isAvailableReview = await StoreReview.isAvailableAsync();
 
   // На пятом запуске запрашиваем оценку
-  // TODO настроить счетчик
   if (launchCountObject.count === 5 && isAvailableReview) {
     await StoreReview.requestReview();
   }

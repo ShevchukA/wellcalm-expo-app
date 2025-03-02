@@ -46,7 +46,7 @@ export default function Month() {
             style={styles.carouselContainer}
             initialPage={currentMonthIndex}
           >
-            {MONTHS.map((month, i) => (
+            {MONTHS.map((month) => (
               <Calendar
                 key={month}
                 year={year}

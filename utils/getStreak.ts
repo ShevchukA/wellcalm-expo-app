@@ -70,7 +70,7 @@ export function getLongestStreakForMonth(
   return streak;
 }
 
-function getStreak(uniqueDays: number[]) {
+export function getStreak(uniqueDays: number[]) {
   let longestStreak = 0;
   let currentStreak = 0;
 

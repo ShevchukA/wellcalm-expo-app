@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useMemo } from 'react';
 
 import { Colors } from '@/constants/Colors';
 import DaysOfWeek from './DaysOfWeek';
@@ -6,10 +7,10 @@ import { Habit } from '@/models/models';
 import IconPencil from '../assets/icons/pencil.svg';
 import Tooltip from './Tooltip';
 import TrackerButton from './TrackerButton';
+import { checkForAchievement } from '@/utils/checkForAchievement';
 import { getCurrentDate } from '@/utils/getDate';
 import { getCurrentWeekDates } from '@/utils/getCurrentWeekDates';
 import { router } from 'expo-router';
-import { useMemo } from 'react';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 import { useUiStore } from '@/store/uiStore';
@@ -24,6 +25,10 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
   const toggleModal = useUiStore((state) => state.toggleModal);
 
   const tutorialStep = useTutorStore((state) => state.tutorial.step);
+
+  useEffect(() => {
+    checkForAchievement(habit);
+  }, [habit]);
 
   const handleEdit = () => {
     selectHabit(habit);

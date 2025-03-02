@@ -13,6 +13,7 @@ import Button from './Button';
 import { Colors } from '@/constants/Colors';
 import { Habit } from '@/models/models';
 import { v4 as generateId } from 'uuid';
+import { getCurrentDate } from '@/utils/getDate';
 import { useStore } from '@/store/store';
 import { useUiStore } from '@/store/uiStore';
 
@@ -25,6 +26,7 @@ export default function Modal({ isVisible }: ModalProps) {
   const addHabit = useStore((state) => state.addHabit);
   const editHabitName = useStore((state) => state.editHabitName);
   const selectHabit = useStore((state) => state.selectHabit);
+
   // TODO store selector for current habit
   const habits = useStore((state) => state.habits);
   const selectedHabitId = useStore((state) => state.selectedHabitId);
@@ -32,6 +34,8 @@ export default function Modal({ isVisible }: ModalProps) {
 
   const [name, setName] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
+
+  const { year } = getCurrentDate();
 
   useEffect(() => {
     setName(selectedHabit?.name || '');
@@ -61,7 +65,7 @@ export default function Modal({ isVisible }: ModalProps) {
       const newHabit: Habit = {
         id: generateId(),
         name: name,
-        dates: [],
+        dates: { [year]: {} },
       };
 
       addHabit(newHabit);

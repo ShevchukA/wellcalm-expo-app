@@ -1,0 +1,16 @@
+export const PHRASES = [
+  "You're on the right track!",
+  'Believe in yourself!',
+  'Today is your day!',
+  'Success begins with a small step!',
+  'Keep pushing forward!',
+  'Every effort counts!',
+  'Stay focused, stay positive!',
+  'Dream big, achieve bigger!',
+  "You're unstoppable!",
+  'Stay strong, keep going!',
+  'Your hard work pays off!',
+  'Take the leap and shine!',
+  'Make today count!',
+  'Believe, achieve, succeed!',
+];

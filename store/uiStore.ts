@@ -1,3 +1,4 @@
+import { PHRASES } from '@/constants/Phrases';
 import { create } from 'zustand';
 
 interface UiStore {
@@ -28,9 +29,10 @@ export const useUiStore = create<UiStore>((set, get) => ({
 
     const id = setTimeout(() => {
       get().hideToast();
-    }, 2000) as unknown as number; // Приведение типа зависит от окружения (NodeJS или браузер)
+    }, 2500) as unknown as number; // Приведение типа зависит от окружения (NodeJS или браузер)
 
-    set({ toastTitle, timeoutId: id, isToastVisible: true });
+    const toastText = PHRASES[Math.floor(Math.random() * PHRASES.length)];
+    set({ toastTitle, toastText, timeoutId: id, isToastVisible: true });
   },
 
   hideToast: () =>
