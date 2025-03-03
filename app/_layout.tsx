@@ -7,6 +7,8 @@ import { useFonts } from 'expo-font';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 
+// TODO hide start screen if tutorial is complete
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 

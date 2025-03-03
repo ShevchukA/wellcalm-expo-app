@@ -15,7 +15,7 @@ import { router } from 'expo-router';
 interface CalendarProps {
   habit: Habit;
   year: string;
-  month: string; // index, 0 - January
+  month: string;
 }
 
 export default function Calendar({ year, month, habit }: CalendarProps) {
