@@ -41,8 +41,8 @@ export default function Year() {
             {Object.keys(selectedHabit.dates).map((year) => (
               <ScrollView
                 key={year}
-                alwaysBounceVertical={false}
                 style={styles.scrollContainer}
+                showsVerticalScrollIndicator={false}
               >
                 <YearList year={year} habit={selectedHabit} />
               </ScrollView>

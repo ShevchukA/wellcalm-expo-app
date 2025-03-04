@@ -8,8 +8,6 @@ import Modal from '@/components/Modal';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { Toast } from '@/components/Toast';
 import Tooltip from '@/components/Tooltip';
-import { checkForAchievement } from '@/utils/checkForAchievement';
-import { useEffect } from 'react';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 import { useUiStore } from '@/store/uiStore';
@@ -61,7 +59,7 @@ export default function Habits() {
           )}
           renderHiddenItem={(data) => <DeleteAction habitID={data.item.id} />}
           rightOpenValue={-66}
-          alwaysBounceVertical={false}
+          showsVerticalScrollIndicator={false}
         />
 
         <View style={styles.footer}>
