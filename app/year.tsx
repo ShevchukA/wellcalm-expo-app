@@ -15,10 +15,9 @@ import { router } from 'expo-router';
 import { useStore } from '@/store/store';
 
 export default function Year() {
-  // TODO store selector for current habit
-  const habits = useStore((state) => state.habits);
-  const selectedHabitId = useStore((state) => state.selectedHabitId);
-  const selectedHabit = habits.find((habit) => habit.id === selectedHabitId);
+  const selectedHabit = useStore((state) =>
+    state.habits.find((habit) => habit.id === state.selectedHabitId)
+  );
 
   const handleBack = () => {
     router.back();

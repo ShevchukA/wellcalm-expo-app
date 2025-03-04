@@ -11,11 +11,11 @@ import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 
 export default function Month() {
-  // TODO store selector for current habit
   const selectHabit = useStore((state) => state.selectHabit);
-  const habits = useStore((state) => state.habits);
-  const selectedHabitId = useStore((state) => state.selectedHabitId);
-  const selectedHabit = habits.find((habit) => habit.id === selectedHabitId);
+  const selectedHabit = useStore((state) =>
+    state.habits.find((habit) => habit.id === state.selectedHabitId)
+  );
+
   const { month: currentMonth, year } = getCurrentDate();
   const currentMonthIndex = MONTHS.findIndex((month) => month === currentMonth);
 
