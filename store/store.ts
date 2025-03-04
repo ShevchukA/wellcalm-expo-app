@@ -1,10 +1,13 @@
-import { Habit } from '@/models/models';
+import { CalendarArray, Habit } from '@/models/models';
+
 import { create } from 'zustand';
+import { createCalendar } from '@/utils/createCalendar';
 import { getAsyncStorageData } from '@/utils/getAsyncStorageData';
 import { setAsyncStorageData } from '@/utils/setAsyncStorageData';
 import { tutorHabit } from '@/models/tutorHabit';
 
 export interface Store {
+  calendar: CalendarArray;
   habits: Habit[];
   selectedHabitId: string | null;
   loadHabitsFromAsyncStore: () => void;
@@ -23,6 +26,7 @@ export interface Store {
 // TODO: is it a good idea to operate with local store from my app store?
 export const useStore = create<Store>((set) => {
   return {
+    calendar: createCalendar(),
     habits: [tutorHabit],
     selectedHabitId: null,
 

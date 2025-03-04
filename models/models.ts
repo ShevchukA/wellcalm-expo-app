@@ -8,6 +8,8 @@ export type Dates = {
   [year: string]: { [month: string]: { [day: string]: boolean } };
 };
 
+export type CalendarArray = (string | null)[][][];
+
 export type LaunchCounter = {
   count: number;
 };

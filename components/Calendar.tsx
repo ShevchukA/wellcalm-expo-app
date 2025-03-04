@@ -11,6 +11,7 @@ import { getCurrentDate } from '@/utils/getDate';
 import { getDatesOfMonth } from '@/utils/getDatesOfMonth';
 import { getLongestStreakForMonth } from '@/utils/getStreak';
 import { router } from 'expo-router';
+import { useStore } from '@/store/store';
 
 interface CalendarProps {
   habit: Habit;
@@ -22,30 +23,8 @@ export default function Calendar({ year, month, habit }: CalendarProps) {
   const { currentFullDate } = getCurrentDate();
   const monthIndex = MONTHS.findIndex((monthName) => monthName === month);
 
-  const firstDate = new Date(Number(year), monthIndex, 1); // первая дата месяца
-  const firstDayOfWeek = firstDate.getDay(); // вернёт число от 0 (вс) до 6 (сб)
-  const shift = (firstDayOfWeek + 6) % 7; // задаем смещение с учетом того, что 0 - понедельник
-
-  const datesArray = getDatesOfMonth(Number(year), monthIndex);
-
-  // Добавляем пустые ячейки в начало, чтобы сместить первый день месяца
-  const calendarCells = [
-    ...Array(shift).fill(null), // "пустые" ячейки
-    ...datesArray,
-  ];
-
-  // Считаем, сколько ячеек в последней неделе
-  const remainder = calendarCells.length % 7;
-
-  // Если remainder не ноль, значит, последняя неделя короче 7 дней
-  if (remainder !== 0) {
-    // Добавляем недостающие ячейки, чтобы довести последнюю неделю до 7 дней
-    const cellsToAdd = 7 - remainder;
-    calendarCells.push(...Array(cellsToAdd).fill(null));
-  }
-
-  // Разбиваем по 7 элементов (дни недели)
-  const weeks = chunkArray(calendarCells, 7);
+  const calendar = useStore((state) => state.calendar);
+  const weeks = calendar[monthIndex];
 
   // Считаем отмеченные дни за месяц
   const checkedDates = countDatesInMonth(habit.dates, year, month);
@@ -76,22 +55,23 @@ export default function Calendar({ year, month, habit }: CalendarProps) {
             {weeks.map((week, i) => (
               <View key={i} style={styles.week}>
                 {week.map((date, i) => {
-                  const isMarked = habit.dates?.[year]?.[month]?.[date];
-                  const fullDate = `${year}-${month}-${date}`;
-
-                  return date ? (
-                    <TrackerButton
-                      key={i}
-                      habitId={habit.id}
-                      year={year}
-                      month={month}
-                      date={date}
-                      isCurrentDate={fullDate === currentFullDate}
-                      isMarked={isMarked}
-                    />
-                  ) : (
-                    <View key={i} style={styles.calendarSpacer} />
-                  );
+                  if (date) {
+                    const isMarked = habit.dates?.[year]?.[month]?.[date];
+                    const fullDate = `${year}-${month}-${date}`;
+                    return (
+                      <TrackerButton
+                        key={i}
+                        habitId={habit.id}
+                        year={year}
+                        month={month}
+                        date={date}
+                        isCurrentDate={fullDate === currentFullDate}
+                        isMarked={isMarked}
+                      />
+                    );
+                  } else {
+                    return <View key={i} style={styles.calendarSpacer} />;
+                  }
                 })}
               </View>
             ))}
