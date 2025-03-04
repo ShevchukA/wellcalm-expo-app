@@ -39,3 +39,12 @@ app-example
 
 # workspace
 .vscode
+
+# IntelliJ IDE
+.idea
+
+# Local ios builds
+build-*
+
+# xcode project
+ios
