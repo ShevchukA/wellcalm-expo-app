@@ -31,12 +31,12 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
   }, [habit]);
 
   const handleEdit = () => {
-    selectHabit(habit);
+    selectHabit(habit.id);
     toggleModal();
   };
 
   const handleOpenCalendar = () => {
-    selectHabit(habit);
+    selectHabit(habit.id);
     router.navigate('/month');
   };
 

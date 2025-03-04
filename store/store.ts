@@ -17,7 +17,7 @@ export interface Store {
     month: string,
     date: string
   ) => void;
-  selectHabit: (habit: Habit | null) => void;
+  selectHabit: (habitId: string | null) => void;
 }
 
 // TODO: is it a good idea to operate with local store from my app store?
@@ -92,6 +92,6 @@ export const useStore = create<Store>((set) => {
         return { habits: newHabits };
       }),
 
-    selectHabit: (habit) => set(() => ({ selectedHabitId: habit?.id })),
+    selectHabit: (habitId) => set(() => ({ selectedHabitId: habitId })),
   };
 });
