@@ -1,13 +1,20 @@
+import { Redirect, router } from 'expo-router';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import Button from '@/components/Button';
 import { Colors } from '@/constants/Colors';
-import { router } from 'expo-router';
+import { useTutorStore } from '@/store/tutorStore';
 
 export default function Index() {
+  const tutorialStep = useTutorStore((state) => state.tutorial.step);
+
   const handleStart = () => {
     router.replace('/habits');
   };
+
+  if (tutorialStep > 0) {
+    return <Redirect href='/habits' />;
+  }
 
   return (
     <View style={styles.screenLayout}>
