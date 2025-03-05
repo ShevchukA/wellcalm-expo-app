@@ -64,7 +64,7 @@ export default function Modal({ isVisible }: ModalProps) {
       const newHabit: Habit = {
         id: generateId(),
         name: name,
-        dates: { [year]: {} },
+        dates: {},
       };
 
       addHabit(newHabit);

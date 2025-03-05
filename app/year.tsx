@@ -19,6 +19,17 @@ export default function Year() {
     state.habits.find((habit) => habit.id === state.selectedHabitId)
   );
 
+  // Массив годов для отображения данных по годам
+  const years = selectedHabit
+    ? Array.from(
+        new Set(
+          Object.keys(selectedHabit.dates).map(
+            (dateStr) => dateStr.split('-')[0]
+          )
+        )
+      )
+    : [];
+
   const handleBack = () => {
     router.back();
   };
@@ -36,9 +47,9 @@ export default function Year() {
         {selectedHabit && (
           <PagerView
             style={styles.carouselContainer}
-            initialPage={Object.keys(selectedHabit.dates).length - 1}
+            initialPage={years.length - 1}
           >
-            {Object.keys(selectedHabit.dates).map((year) => (
+            {years.map((year) => (
               <ScrollView
                 key={year}
                 style={styles.scrollContainer}

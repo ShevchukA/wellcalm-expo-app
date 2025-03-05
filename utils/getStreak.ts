@@ -1,6 +1,7 @@
 import { Dates } from '@/models/models';
 import { MONTHS } from '@/constants/Months';
 
+// TODO
 export function getLongestStreakForYear(dates: Dates, year: string): number {
   const yearData = dates[year];
   if (!yearData) return 0;
@@ -52,15 +53,28 @@ export function getLongestStreakForYear(dates: Dates, year: string): number {
   return streak;
 }
 
+// TODO
 export function getLongestStreakForMonth(
   dates: Dates,
   year: string,
-  month: string
+  month: string // May
 ): number {
-  // Отфильтруем даты, которые относятся к нужному году и месяцу.
-  const monthDays = dates?.[year]?.[month] ?? {};
+  const yearData = dates[year];
+  if (!yearData) return 0;
 
-  const daysArray = Object.keys(monthDays).map((day) => Number(day));
+  const monthNumber = (MONTHS.findIndex((monthName) => monthName === month) + 1)
+    .toString()
+    .padStart(2, '0'); // May => 05
+
+  // Отфильтруем даты, которые относятся к нужному году и месяцу.
+  const monthDays = Object.keys(yearData).filter((date) => {
+    const [y, m] = date.split('-'); // y - год, m - месяц
+    return y === year && m === monthNumber;
+  });
+
+  const daysArray = Object.keys(monthDays).map((day) =>
+    Number(day.split('-')[2])
+  );
 
   // Отсортируем по возрастанию
   const sortedDays = daysArray.sort((a, b) => a - b);

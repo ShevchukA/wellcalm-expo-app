@@ -3,30 +3,32 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import DaysOfWeek from './DaysOfWeek';
 import { Habit } from '@/models/models';
-import { MONTHS } from '@/constants/Months';
 import TrackerButton from './TrackerButton';
 import { countDatesInMonth } from '@/utils/countDays';
 import { getCurrentDate } from '@/utils/getDate';
 import { getLongestStreakForMonth } from '@/utils/getStreak';
 import { router } from 'expo-router';
-import { useStore } from '@/store/store';
 
 interface CalendarProps {
   habit: Habit;
   year: string;
   month: string;
+  monthNumber: string;
+  weeks: (string | null)[][];
 }
 
-export default function Calendar({ year, month, habit }: CalendarProps) {
-  const { currentFullDate } = getCurrentDate();
-  const monthIndex = MONTHS.findIndex((monthName) => monthName === month);
-
-  const calendar = useStore((state) => state.calendar);
-  const weeks = calendar[monthIndex];
+export default function Calendar({
+  year,
+  month,
+  monthNumber,
+  weeks,
+  habit,
+}: CalendarProps) {
+  const { currentISODate } = getCurrentDate();
 
   // Считаем отмеченные дни за месяц
-  const checkedDates = countDatesInMonth(habit.dates, year, month);
-  const streak = getLongestStreakForMonth(habit.dates, year, month);
+  const checkedDates = countDatesInMonth(habit.dates, year, monthNumber);
+  const streak = getLongestStreakForMonth(habit.dates, year, monthNumber);
 
   const handlePress = () => {
     router.navigate('/year');
@@ -54,17 +56,13 @@ export default function Calendar({ year, month, habit }: CalendarProps) {
               <View key={i} style={styles.week}>
                 {week.map((date, i) => {
                   if (date) {
-                    const isMarked = habit.dates?.[year]?.[month]?.[date];
-                    const fullDate = `${year}-${month}-${date}`;
                     return (
                       <TrackerButton
                         key={i}
                         habitId={habit.id}
-                        year={year}
-                        month={month}
                         date={date}
-                        isCurrentDate={fullDate === currentFullDate}
-                        isMarked={isMarked}
+                        isCurrentDate={date === currentISODate}
+                        isMarked={habit.dates?.[date]}
                       />
                     );
                   } else {

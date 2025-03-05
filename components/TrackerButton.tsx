@@ -5,17 +5,13 @@ import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 
 interface TrackerButtonProps {
-  year: string;
-  month: string;
-  date: string;
+  date: string; // YYYY-MM-DD
   isCurrentDate: boolean;
   isMarked: boolean;
   habitId: string;
 }
 
 export default function TrackerButton({
-  year,
-  month,
   date,
   isCurrentDate,
   isMarked,
@@ -27,7 +23,8 @@ export default function TrackerButton({
   const updateStep = useTutorStore((state) => state.updateStep);
 
   const handlePress = () => {
-    checkDate(habitId, year, month, date);
+    const year = date.split('-')[0];
+    checkDate(habitId, date);
 
     if (tutorialStep === 0) {
       nextTutorialStep();
@@ -45,7 +42,7 @@ export default function TrackerButton({
             isMarked && isCurrentDate && styles.currentMarkedDate,
           ]}
         >
-          {date}
+          {date.split('-')[2]}
         </Text>
       </View>
     </Pressable>

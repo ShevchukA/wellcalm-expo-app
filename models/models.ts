@@ -5,7 +5,7 @@ export type Habit = {
 };
 
 export type Dates = {
-  [year: string]: { [month: string]: { [day: string]: boolean } };
+  [date: string]: boolean;
 };
 
 export type CalendarArray = (string | null)[][][];

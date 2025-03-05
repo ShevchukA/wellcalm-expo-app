@@ -1,9 +1,9 @@
+import { MONTHS, MONTHS_NUMBERS } from '@/constants/Months';
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import Calendar from '../components/Calendar';
 import CarouselIndicator from '@/components/CarouselIndicator';
 import { Colors } from '@/constants/Colors';
-import { MONTHS } from '@/constants/Months';
 import PagerView from 'react-native-pager-view';
 import { getCurrentDate } from '@/utils/getDate';
 import { router } from 'expo-router';
@@ -15,6 +15,7 @@ export default function Month() {
   const selectedHabit = useStore((state) =>
     state.habits.find((habit) => habit.id === state.selectedHabitId)
   );
+  const calendar = useStore((state) => state.calendar);
 
   const { month: currentMonth, year } = getCurrentDate();
   const currentMonthIndex = MONTHS.findIndex((month) => month === currentMonth);
@@ -46,11 +47,13 @@ export default function Month() {
             style={styles.carouselContainer}
             initialPage={currentMonthIndex}
           >
-            {MONTHS.map((month) => (
+            {MONTHS.map((month, i) => (
               <Calendar
                 key={month}
                 year={year}
                 month={month}
+                monthNumber={MONTHS_NUMBERS[i]}
+                weeks={calendar[i]}
                 habit={selectedHabit}
               />
             ))}

@@ -40,10 +40,7 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
     router.navigate('/month');
   };
 
-  const { year, month, date, currentFullDate } = useMemo(
-    () => getCurrentDate(),
-    []
-  );
+  const { year, month, currentISODate } = useMemo(() => getCurrentDate(), []);
   const currentWeekDates = useMemo(() => getCurrentWeekDates(), []);
 
   const isTutorCard = habit.id === 'tutorial';
@@ -109,23 +106,13 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
             >
               <View style={styles.datesContainer}>
                 {currentWeekDates.map((weekDate: string) => {
-                  const weekDateNumber = weekDate.split('-')[2];
-                  const weekDateMonth = weekDate.split('-')[1];
-                  const weekDateYear = weekDate.split('-')[0];
-                  const isMarked =
-                    habit.dates?.[weekDateYear]?.[weekDateMonth]?.[
-                      weekDateNumber
-                    ];
-
                   return (
                     <TrackerButton
                       key={weekDate}
                       habitId={habit.id}
-                      year={weekDateYear}
-                      month={weekDateMonth}
-                      date={weekDateNumber}
-                      isMarked={isMarked}
-                      isCurrentDate={weekDate === currentFullDate}
+                      date={weekDate}
+                      isMarked={habit.dates?.[weekDate]}
+                      isCurrentDate={weekDate === currentISODate}
                     />
                   );
                 })}

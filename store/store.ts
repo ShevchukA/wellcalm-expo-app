@@ -14,12 +14,7 @@ export interface Store {
   addHabit: (habit: Habit) => void;
   deleteHabit: (id: string) => void;
   editHabitName: (id: string, newName: string) => void;
-  checkDate: (
-    habitId: string,
-    year: string,
-    month: string,
-    date: string
-  ) => void;
+  checkDate: (habitId: string, date: string) => void;
   selectHabit: (habitId: string | null) => void;
 }
 
@@ -64,7 +59,7 @@ export const useStore = create<Store>((set) => {
         return { habits: newHabits };
       }),
 
-    checkDate: (habitId, year, month, date) =>
+    checkDate: (habitId, date) =>
       set((state) => {
         const newHabits = state.habits.map((habit) => {
           if (habit.id !== habitId) {
@@ -72,22 +67,18 @@ export const useStore = create<Store>((set) => {
           }
 
           // Получаем вложенные объекты, если они существуют, иначе создаём пустые
-          const yearObj = habit.dates[year] ?? {};
-          const monthObj = yearObj[month] ?? {};
+          const dates = habit.dates ?? {};
 
-          let updatedMonth: { [date: string]: boolean };
+          let updatedDates = {};
 
           // Если для данной даты значение отсутствует или false, добавляем со значением true
-          if (!monthObj[date]) {
-            updatedMonth = { ...monthObj, [date]: true };
+          if (!dates[date]) {
+            updatedDates = { ...dates, [date]: true };
           } else {
             // Если значение уже установлено, удаляем свойство
-            const { [date]: removed, ...rest } = monthObj;
-            updatedMonth = rest;
+            const { [date]: removed, ...rest } = dates;
+            updatedDates = rest;
           }
-
-          const updatedYear = { ...yearObj, [month]: updatedMonth };
-          const updatedDates = { ...habit.dates, [year]: updatedYear };
 
           return { ...habit, dates: updatedDates };
         });

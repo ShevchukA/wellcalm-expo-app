@@ -32,7 +32,7 @@ export default function YearList({ habit, year }: YearListProps) {
                   <Text style={styles.month}>{month}</Text>
                   <View style={styles.daysContainer}>
                     {days.map((day) => {
-                      const isMarked = habit.dates?.[year]?.[month]?.[day];
+                      const isMarked = habit.dates?.[day];
                       return (
                         <View
                           key={day}

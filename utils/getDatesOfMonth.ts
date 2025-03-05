@@ -5,9 +5,10 @@ export function getDatesOfMonth(year: number, month: number): string[] {
   // что возвращает нам последний день предыдущего месяца
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  // формируем массив дат в формате "DD" с 1 до количества дней в месяце
-  const datesArray = Array.from({ length: daysInMonth }, (_, i) =>
-    (i + 1).toString().padStart(2, '0')
+  // формируем массив дат в формате "YYYY-MM-DD" с 1 до количества дней в месяце
+  const datesArray = Array.from(
+    { length: daysInMonth },
+    (_, i) => new Date(Date.UTC(year, month, i + 1)).toISOString().split('T')[0]
   );
 
   return datesArray;
