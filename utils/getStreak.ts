@@ -1,11 +1,6 @@
 import { Dates } from '@/models/models';
-import { MONTHS } from '@/constants/Months';
 
-// TODO
 export function getLongestStreakForYear(dates: Dates, year: string): number {
-  const yearData = dates[year];
-  if (!yearData) return 0;
-
   // Определяем, является ли год високосным
   const numericYear = parseInt(year, 10);
   const isLeapYear =
@@ -28,22 +23,22 @@ export function getLongestStreakForYear(dates: Dates, year: string): number {
     31,
   ];
 
-  // Собираем порядковые номера дней, где значение true
-  let dayNumbers: number[] = [];
+  // Фильтруем ключи, оставляем только даты указанного года и с отмеченным значением true
+  const relevantDates = Object.keys(dates).filter((date) =>
+    date.startsWith(year)
+  );
 
-  for (const month in yearData) {
-    const monthIndex = MONTHS.findIndex((monthName) => monthName === month);
-    Object.entries(yearData[month]).forEach(([dayStr, value]) => {
-      if (value) {
-        const day = parseInt(dayStr, 10);
-        // Вычисляем порядковый номер: сумма дней всех предыдущих месяцев + day
-        const dayOfYear =
-          monthLengths.slice(0, monthIndex).reduce((acc, cur) => acc + cur, 0) +
-          day;
-        dayNumbers.push(dayOfYear);
-      }
-    });
-  }
+  // Собираем порядковые номера дней, где значение true
+  let dayNumbers: number[] = relevantDates.map((dateStr) => {
+    // Предполагается формат "YYYY-MM-DD"
+    const [, monthStr, dayStr] = dateStr.split('-');
+    const month = parseInt(monthStr, 10); // месяц от 1 до 12
+    const day = parseInt(dayStr, 10);
+    // Сумма дней в предыдущих месяцах + текущий день
+    const dayOfYear =
+      monthLengths.slice(0, month - 1).reduce((acc, cur) => acc + cur, 0) + day;
+    return dayOfYear;
+  });
 
   if (dayNumbers.length === 0) return 0;
 
@@ -53,28 +48,17 @@ export function getLongestStreakForYear(dates: Dates, year: string): number {
   return streak;
 }
 
-// TODO
 export function getLongestStreakForMonth(
   dates: Dates,
   year: string,
-  month: string // May
+  monthNumber: string // 05
 ): number {
-  const yearData = dates[year];
-  if (!yearData) return 0;
-
-  const monthNumber = (MONTHS.findIndex((monthName) => monthName === month) + 1)
-    .toString()
-    .padStart(2, '0'); // May => 05
-
   // Отфильтруем даты, которые относятся к нужному году и месяцу.
-  const monthDays = Object.keys(yearData).filter((date) => {
-    const [y, m] = date.split('-'); // y - год, m - месяц
-    return y === year && m === monthNumber;
-  });
-
-  const daysArray = Object.keys(monthDays).map((day) =>
-    Number(day.split('-')[2])
+  const monthDates = Object.keys(dates).filter((date) =>
+    date.startsWith(`${year}-${monthNumber}`)
   );
+
+  const daysArray = monthDates.map((date) => Number(date.split('-')[2]));
 
   // Отсортируем по возрастанию
   const sortedDays = daysArray.sort((a, b) => a - b);
