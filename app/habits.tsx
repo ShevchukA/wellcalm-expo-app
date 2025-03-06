@@ -1,11 +1,15 @@
 import { Colors, HabitsColors } from '@/constants/Colors';
+import DraggableFlatList, {
+  RenderItemParams,
+} from 'react-native-draggable-flatlist';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import AddButton from '@/components/AddButton';
 import DeleteAction from '@/components/DeleteAction';
+import { Habit } from '@/models/models';
 import HabitCard from '@/components/HabitCard';
 import Modal from '@/components/Modal';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import SwipeableItem from 'react-native-swipeable-item';
 import { Toast } from '@/components/Toast';
 import Tooltip from '@/components/Tooltip';
 import { useStore } from '@/store/store';
@@ -19,6 +23,7 @@ export default function Habits() {
   const tutorial = useTutorStore((state) => state.tutorial);
   const nextTutorialStep = useTutorStore((state) => state.nextStep);
   const updateStep = useTutorStore((state) => state.updateStep);
+  const updateHabits = useStore((state) => state.updateHabits);
 
   const handleShowModal = () => {
     toggleModal();
@@ -37,6 +42,24 @@ export default function Habits() {
     }
   };
 
+  const renderItem = ({ item, getIndex, drag }: RenderItemParams<Habit>) => {
+    const index = getIndex() ?? 0;
+    return (
+      <SwipeableItem
+        key={item.id}
+        item={item}
+        snapPointsLeft={[66]}
+        renderUnderlayLeft={() => <DeleteAction habitID={item.id} />}
+      >
+        <HabitCard
+          habit={item}
+          color={HabitsColors[index % HabitsColors.length]}
+          onLongPress={drag}
+        />
+      </SwipeableItem>
+    );
+  };
+
   return (
     <View style={styles.screenLayout}>
       <Modal isVisible={isModalOpen} />
@@ -48,19 +71,17 @@ export default function Habits() {
           <Text style={styles.title}>YOUR HABITS</Text>
         </View>
 
-        <SwipeListView
-          data={habits}
-          keyExtractor={(habit) => habit.id}
-          renderItem={(data) => (
-            <HabitCard
-              habit={data.item}
-              color={HabitsColors[data.index % HabitsColors.length]}
-            />
-          )}
-          renderHiddenItem={(data) => <DeleteAction habitID={data.item.id} />}
-          rightOpenValue={-66}
-          showsVerticalScrollIndicator={false}
-        />
+        <View style={styles.scrollContainer}>
+          <DraggableFlatList
+            data={habits}
+            extraData={habits}
+            keyExtractor={(habit) => habit.id}
+            renderItem={renderItem}
+            onDragEnd={({ data }) => updateHabits(data)}
+            activationDistance={20} // to avoid conflict with swipe
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
 
         <View style={styles.footer}>
           <Tooltip

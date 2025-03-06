@@ -18,9 +18,14 @@ import { useUiStore } from '@/store/uiStore';
 interface HabitCardProps {
   habit: Habit;
   color: string;
+  onLongPress: () => void;
 }
 
-export default function HabitCard({ habit, color }: HabitCardProps) {
+export default function HabitCard({
+  habit,
+  color,
+  onLongPress,
+}: HabitCardProps) {
   const selectHabit = useStore((state) => state.selectHabit);
   const toggleModal = useUiStore((state) => state.toggleModal);
 
@@ -46,7 +51,7 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
   const isTutorCard = habit.id === 'tutorial';
 
   return (
-    <View style={styles.cardWrapper}>
+    <Pressable style={styles.cardWrapper} onLongPress={onLongPress}>
       {isTutorCard && (
         <View style={styles.tutorContainer}>
           <Text style={styles.tutorLabel}>how about new habit?</Text>
@@ -121,7 +126,7 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
           </View>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 

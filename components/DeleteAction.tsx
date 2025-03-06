@@ -1,4 +1,4 @@
-import { Animated, Pressable } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import BinIcon from '../assets/icons/trash-bin.svg';
 import React from 'react';
@@ -29,11 +29,11 @@ function DeleteAction({ habitID }: DeleteActionProps) {
   };
 
   return (
-    <Animated.View style={[styles.deleteActionContainer]}>
+    <View style={[styles.deleteActionContainer]}>
       <Pressable style={styles.deleteButton} onPress={handleDelete}>
         <BinIcon />
       </Pressable>
-    </Animated.View>
+    </View>
   );
 }
 
