@@ -12,6 +12,7 @@ import Modal from '@/components/Modal';
 import SwipeableItem from 'react-native-swipeable-item';
 import { Toast } from '@/components/Toast';
 import Tooltip from '@/components/Tooltip';
+import { useCallback } from 'react';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 import { useUiStore } from '@/store/uiStore';
@@ -42,23 +43,26 @@ export default function Habits() {
     }
   };
 
-  const renderItem = ({ item, getIndex, drag }: RenderItemParams<Habit>) => {
-    const index = getIndex() ?? 0;
-    return (
-      <SwipeableItem
-        key={item.id}
-        item={item}
-        snapPointsLeft={[66]}
-        renderUnderlayLeft={() => <DeleteAction habitID={item.id} />}
-      >
-        <HabitCard
-          habit={item}
-          color={HabitsColors[index % HabitsColors.length]}
-          onLongPress={drag}
-        />
-      </SwipeableItem>
-    );
-  };
+  const renderItem = useCallback(
+    ({ item, getIndex, drag }: RenderItemParams<Habit>) => {
+      const index = getIndex() ?? 0;
+      return (
+        <SwipeableItem
+          key={item.id}
+          item={item}
+          snapPointsLeft={[66]}
+          renderUnderlayLeft={() => <DeleteAction habitID={item.id} />}
+        >
+          <HabitCard
+            habit={item}
+            color={HabitsColors[index % HabitsColors.length]}
+            onLongPress={drag}
+          />
+        </SwipeableItem>
+      );
+    },
+    []
+  );
 
   return (
     <View style={styles.screenLayout}>
@@ -73,6 +77,7 @@ export default function Habits() {
 
         <View style={styles.scrollContainer}>
           <DraggableFlatList
+            style={{ alignSelf: 'stretch', borderWidth: 1, borderColor: 'red' }} // TODO
             data={habits}
             extraData={habits}
             keyExtractor={(habit) => habit.id}
@@ -117,6 +122,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
+    borderWidth: 1, // TODO
   },
   footer: {
     height: 106,
