@@ -17,15 +17,10 @@ import { useUiStore } from '@/store/uiStore';
 
 interface HabitCardProps {
   habit: Habit;
-  color: string;
   onLongPress: () => void;
 }
 
-export default function HabitCard({
-  habit,
-  color,
-  onLongPress,
-}: HabitCardProps) {
+export default function HabitCard({ habit, onLongPress }: HabitCardProps) {
   const selectHabit = useStore((state) => state.selectHabit);
   const toggleModal = useUiStore((state) => state.toggleModal);
 
@@ -68,7 +63,7 @@ export default function HabitCard({
           <View
             style={[
               styles.titleContainer,
-              { backgroundColor: color },
+              { backgroundColor: habit.color },
               isTutorCard && styles.tutorCard,
             ]}
           >

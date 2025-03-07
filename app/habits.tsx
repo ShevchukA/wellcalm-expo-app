@@ -53,11 +53,7 @@ export default function Habits() {
           snapPointsLeft={[66]}
           renderUnderlayLeft={() => <DeleteAction habitID={item.id} />}
         >
-          <HabitCard
-            habit={item}
-            color={HabitsColors[index % HabitsColors.length]}
-            onLongPress={drag}
-          />
+          <HabitCard habit={item} onLongPress={drag} />
         </SwipeableItem>
       );
     },

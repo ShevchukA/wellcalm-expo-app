@@ -1,5 +1,6 @@
 import 'react-native-get-random-values'; // TODO куда лучше поместить? необходима для работы uuid
 
+import { Colors, HabitsColors } from '@/constants/Colors';
 import {
   Modal as ModalView,
   StyleSheet,
@@ -10,7 +11,6 @@ import {
 import { SetStateAction, useEffect, useState } from 'react';
 
 import Button from './Button';
-import { Colors } from '@/constants/Colors';
 import { Habit } from '@/models/models';
 import { v4 as generateId } from 'uuid';
 import { getCurrentDate } from '@/utils/getDate';
@@ -27,6 +27,7 @@ export default function Modal({ isVisible }: ModalProps) {
   const editHabitName = useStore((state) => state.editHabitName);
   const selectHabit = useStore((state) => state.selectHabit);
 
+  const habits = useStore((state) => state.habits);
   const selectedHabit = useStore((state) =>
     state.habits.find((habit) => habit.id === state.selectedHabitId)
   );
@@ -61,9 +62,21 @@ export default function Modal({ isVisible }: ModalProps) {
     if (selectedHabit) {
       editHabitName(selectedHabit.id, name);
     } else {
+      const usedColors = habits.map((habit) => habit.color);
+      const availableColors = HabitsColors.filter((color) => {
+        return !usedColors.some((c) => c === color);
+      });
+
+      if (availableColors.length === 0) {
+        availableColors.push(...HabitsColors);
+      }
+
+      const color = availableColors[habits.length % availableColors.length];
+
       const newHabit: Habit = {
         id: generateId(),
         name: name,
+        color: color,
         dates: {},
       };
 
