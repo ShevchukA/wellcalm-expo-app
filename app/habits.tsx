@@ -1,5 +1,6 @@
 import DragList, { DragListRenderItemInfo } from 'react-native-draglist';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useEffect, useRef } from 'react';
 
 import AddButton from '@/components/AddButton';
 import { Colors } from '@/constants/Colors';
@@ -10,7 +11,6 @@ import Modal from '@/components/Modal';
 import SwipeableItem from 'react-native-swipeable-item';
 import { Toast } from '@/components/Toast';
 import Tooltip from '@/components/Tooltip';
-import { useCallback } from 'react';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 import { useUiStore } from '@/store/uiStore';
@@ -40,6 +40,17 @@ export default function Habits() {
       nextTutorialStep();
     }
   };
+
+  const listRef = useRef<any>(null);
+  const prevHabitsLength = useRef<number>(habits.length);
+
+  // При добавлении элемента, прокручиваем список в конец
+  useEffect(() => {
+    if (habits.length > prevHabitsLength.current && listRef.current) {
+      listRef.current.scrollToEnd({ animated: true });
+    }
+    prevHabitsLength.current = habits.length;
+  }, [habits]);
 
   const renderItem = useCallback((info: DragListRenderItemInfo<Habit>) => {
     const { item, onDragStart, onDragEnd, isActive } = info;
@@ -91,6 +102,7 @@ export default function Habits() {
             contentContainerStyle={{
               flexGrow: 1,
             }} // TODO
+            ref={listRef}
             data={habits}
             extraData={habits}
             keyExtractor={(habit) => habit.id}

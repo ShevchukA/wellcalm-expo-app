@@ -30,8 +30,9 @@ export default function RootLayout() {
   );
 
   useEffect(() => {
-    // loadHabitsFromAsyncStore();
-    // loadTutorialFromAsyncStore();
+    // TODO
+    loadHabitsFromAsyncStore();
+    loadTutorialFromAsyncStore();
     checkAndPromptReview();
     manageNotifications();
   }, []);
