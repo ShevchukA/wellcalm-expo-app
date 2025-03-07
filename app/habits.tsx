@@ -1,10 +1,10 @@
-import { Colors, HabitsColors } from '@/constants/Colors';
 import DraggableFlatList, {
   RenderItemParams,
 } from 'react-native-draggable-flatlist';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import AddButton from '@/components/AddButton';
+import { Colors } from '@/constants/Colors';
 import DeleteAction from '@/components/DeleteAction';
 import { Habit } from '@/models/models';
 import HabitCard from '@/components/HabitCard';
@@ -43,22 +43,18 @@ export default function Habits() {
     }
   };
 
-  const renderItem = useCallback(
-    ({ item, getIndex, drag }: RenderItemParams<Habit>) => {
-      const index = getIndex() ?? 0;
-      return (
-        <SwipeableItem
-          key={item.id}
-          item={item}
-          snapPointsLeft={[66]}
-          renderUnderlayLeft={() => <DeleteAction habitID={item.id} />}
-        >
-          <HabitCard habit={item} onLongPress={drag} />
-        </SwipeableItem>
-      );
-    },
-    []
-  );
+  const renderItem = useCallback(({ item, drag }: RenderItemParams<Habit>) => {
+    return (
+      <SwipeableItem
+        key={item.id}
+        item={item}
+        snapPointsLeft={[66]}
+        renderUnderlayLeft={() => <DeleteAction habitID={item.id} />}
+      >
+        <HabitCard habit={item} onLongPress={drag} />
+      </SwipeableItem>
+    );
+  }, []);
 
   return (
     <View style={styles.screenLayout}>

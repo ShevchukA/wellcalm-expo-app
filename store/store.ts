@@ -11,7 +11,7 @@ export interface Store {
   habits: Habit[];
   selectedHabitId: string | null;
   loadHabitsFromAsyncStore: () => void;
-  updateHabits: (habits: Habit[]) => void;
+  updateHabits: (newHabits: Habit[]) => void;
   addHabit: (habit: Habit) => void;
   deleteHabit: (id: string) => void;
   editHabitName: (id: string, newName: string) => void;
@@ -33,10 +33,10 @@ export const useStore = create<Store>((set) => {
       }
     },
 
-    updateHabits: (habits: Habit[]) =>
-      set((state) => {
-        setAsyncStorageData('habits', habits);
-        return { ...state, habits };
+    updateHabits: (newHabits: Habit[]) =>
+      set(() => {
+        setAsyncStorageData('habits', newHabits);
+        return { habits: newHabits };
       }),
 
     addHabit: (newHabit) => {

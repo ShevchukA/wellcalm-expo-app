@@ -17,8 +17,8 @@ export const Colors = {
 };
 
 export const HabitsColors = [
-  '#C4CCBB',
   '#DDEB97',
+  '#C4CCBB',
   '#E1CECE',
   '#EBB797',
   '#BFCDF3',
