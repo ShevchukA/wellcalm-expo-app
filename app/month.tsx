@@ -5,6 +5,7 @@ import Calendar from '../components/Calendar';
 import CarouselIndicator from '@/components/CarouselIndicator';
 import { Colors } from '@/constants/Colors';
 import PagerView from 'react-native-pager-view';
+import { Toast } from '@/components/Toast';
 import { getCurrentDate } from '@/utils/getDate';
 import { router } from 'expo-router';
 import { useStore } from '@/store/store';
@@ -35,6 +36,8 @@ export default function Month() {
   return (
     <View style={styles.screenLayout}>
       <SafeAreaView style={styles.screenLayout}>
+        <Toast />
+
         <View style={styles.header}>
           <Pressable style={styles.backButtonWrapper} onPress={handleBack}>
             <Text style={styles.icon}>{'<'}</Text>

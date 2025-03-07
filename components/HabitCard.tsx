@@ -33,9 +33,10 @@ export default function HabitCard({
   const tutorialStep = useTutorStore((state) => state.tutorial.step);
   const nextTutorialStep = useTutorStore((state) => state.nextStep);
 
-  useEffect(() => {
-    checkForAchievement(habit);
-  }, [habit]);
+  // TODO
+  // useEffect(() => {
+  //   checkForAchievement(habit);
+  // }, [habit]);
 
   const handleEdit = () => {
     selectHabit(habit.id);

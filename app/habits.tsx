@@ -53,7 +53,7 @@ export default function Habits() {
   }, [habits]);
 
   const renderItem = useCallback((info: DragListRenderItemInfo<Habit>) => {
-    const { item, onDragStart, onDragEnd, isActive } = info;
+    const { item, onDragStart, onDragEnd } = info;
     return (
       <SwipeableItem
         key={item.id}
