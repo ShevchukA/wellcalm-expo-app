@@ -18,9 +18,15 @@ import { useUiStore } from '@/store/uiStore';
 interface HabitCardProps {
   habit: Habit;
   onLongPress: () => void;
+  onPressOut: () => void;
+  // onLongPress: () => void;
 }
 
-export default function HabitCard({ habit, onLongPress }: HabitCardProps) {
+export default function HabitCard({
+  habit,
+  onLongPress,
+  onPressOut,
+}: HabitCardProps) {
   const selectHabit = useStore((state) => state.selectHabit);
   const toggleModal = useUiStore((state) => state.toggleModal);
 
@@ -46,7 +52,11 @@ export default function HabitCard({ habit, onLongPress }: HabitCardProps) {
   const isTutorCard = habit.id === 'tutorial';
 
   return (
-    <Pressable style={styles.cardWrapper} onLongPress={onLongPress}>
+    <Pressable
+      style={styles.cardWrapper}
+      onLongPress={onLongPress}
+      onPressOut={onPressOut}
+    >
       {isTutorCard && (
         <View style={styles.tutorContainer}>
           <Text style={styles.tutorLabel}>how about new habit?</Text>

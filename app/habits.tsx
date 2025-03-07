@@ -1,6 +1,4 @@
-import DraggableFlatList, {
-  RenderItemParams,
-} from 'react-native-draggable-flatlist';
+import DragList, { DragListRenderItemInfo } from 'react-native-draglist';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import AddButton from '@/components/AddButton';
@@ -43,7 +41,8 @@ export default function Habits() {
     }
   };
 
-  const renderItem = useCallback(({ item, drag }: RenderItemParams<Habit>) => {
+  const renderItem = useCallback((info: DragListRenderItemInfo<Habit>) => {
+    const { item, onDragStart, onDragEnd, isActive } = info;
     return (
       <SwipeableItem
         key={item.id}
@@ -51,10 +50,22 @@ export default function Habits() {
         snapPointsLeft={[66]}
         renderUnderlayLeft={() => <DeleteAction habitID={item.id} />}
       >
-        <HabitCard habit={item} onLongPress={drag} />
+        <HabitCard
+          onLongPress={onDragStart}
+          onPressOut={onDragEnd}
+          habit={item}
+        />
       </SwipeableItem>
     );
   }, []);
+
+  async function onReordered(fromIndex: number, toIndex: number) {
+    const newHabits = [...habits];
+    const removed = newHabits.splice(fromIndex, 1);
+
+    newHabits.splice(toIndex, 0, removed[0]); // Now insert at the new pos
+    updateHabits(newHabits);
+  }
 
   return (
     <View style={styles.screenLayout}>
@@ -68,14 +79,23 @@ export default function Habits() {
         </View>
 
         <View style={styles.scrollContainer}>
-          <DraggableFlatList
-            style={{ alignSelf: 'stretch', borderWidth: 1, borderColor: 'red' }} // TODO
+          <DragList
+            style={
+              {
+                // flex: 1,
+                // flexGrow: 1,
+                // borderWidth: 1,
+                // borderColor: 'red',
+              }
+            } // TODO
+            contentContainerStyle={{
+              flexGrow: 1,
+            }} // TODO
             data={habits}
             extraData={habits}
             keyExtractor={(habit) => habit.id}
             renderItem={renderItem}
-            onDragEnd={({ data }) => updateHabits(data)}
-            activationDistance={20} // to avoid conflict with swipe
+            onReordered={onReordered}
             showsVerticalScrollIndicator={false}
           />
         </View>
@@ -114,7 +134,6 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
-    borderWidth: 1, // TODO
   },
   footer: {
     height: 106,
