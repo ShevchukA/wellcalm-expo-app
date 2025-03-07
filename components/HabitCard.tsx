@@ -31,6 +31,7 @@ export default function HabitCard({
   const toggleModal = useUiStore((state) => state.toggleModal);
 
   const tutorialStep = useTutorStore((state) => state.tutorial.step);
+  const nextTutorialStep = useTutorStore((state) => state.nextStep);
 
   useEffect(() => {
     checkForAchievement(habit);
@@ -43,6 +44,11 @@ export default function HabitCard({
 
   const handleOpenCalendar = () => {
     selectHabit(habit.id);
+
+    if (tutorialStep === 1) {
+      nextTutorialStep();
+    }
+
     router.navigate('/month');
   };
 
@@ -65,10 +71,9 @@ export default function HabitCard({
 
       <View style={[styles.card]}>
         <Tooltip
-          isVisible={tutorialStep === 2 && isTutorCard}
-          text={'Swipe left\nto delete'}
-          pointerDirection='top'
-          position={{ left: 226, top: 120 }}
+          isVisible={tutorialStep === 3 && isTutorCard}
+          text={'Swipe card left to delete'}
+          position={{ left: 170, top: 176 }}
         >
           <View
             style={[
@@ -87,9 +92,8 @@ export default function HabitCard({
         <View style={styles.trackerContainer}>
           <Tooltip
             isVisible={tutorialStep === 1 && isTutorCard}
-            text={'Tap to open the full\ncalendar'}
-            pointerDirection='top'
-            position={{ left: 90, top: 66 }}
+            text={'Tap on the month\nto open full calendar'}
+            position={{ left: 0, top: 50 }}
           >
             <Pressable
               style={({ pressed }) => [
@@ -111,8 +115,7 @@ export default function HabitCard({
             <Tooltip
               isVisible={tutorialStep === 0 && isTutorCard}
               text={'Tap to mark the day,\ntap to unmark'}
-              pointerDirection='top'
-              position={{ left: 26, top: 72 }}
+              position={{ left: 50, top: 46 }}
             >
               <View style={styles.datesContainer}>
                 {currentWeekDates.map((weekDate: string) => {

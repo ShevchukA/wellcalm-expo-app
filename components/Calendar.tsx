@@ -3,11 +3,13 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import DaysOfWeek from './DaysOfWeek';
 import { Habit } from '@/models/models';
+import Tooltip from './Tooltip';
 import TrackerButton from './TrackerButton';
 import { countDatesInMonth } from '@/utils/countDays';
 import { getCurrentDate } from '@/utils/getDate';
 import { getLongestStreakForMonth } from '@/utils/getStreak';
 import { router } from 'expo-router';
+import { useTutorStore } from '@/store/tutorStore';
 
 interface CalendarProps {
   habit: Habit;
@@ -24,6 +26,9 @@ export default function Calendar({
   weeks,
   habit,
 }: CalendarProps) {
+  const tutorialStep = useTutorStore((state) => state.tutorial.step);
+  const nextTutorialStep = useTutorStore((state) => state.nextStep);
+
   const { currentISODate } = getCurrentDate();
 
   // Считаем отмеченные дни за месяц
@@ -31,22 +36,32 @@ export default function Calendar({
   const streak = getLongestStreakForMonth(habit.dates, year, monthNumber);
 
   const handlePress = () => {
+    if (tutorialStep === 2) {
+      nextTutorialStep();
+    }
+
     router.navigate('/year');
   };
 
   return (
     <View style={styles.wrapper}>
       <View style={styles.card}>
-        <Pressable
-          style={({ pressed }) => [
-            styles.titleContainer,
-            pressed && styles.pressed,
-          ]}
-          onPress={handlePress}
+        <Tooltip
+          isVisible={tutorialStep === 2}
+          text={'Tap on the year\nto open annual statistics'}
+          position={{ left: 10, top: 50 }}
         >
-          <Text style={styles.title}>{year}</Text>
-          <Text style={styles.icon}>{'>'}</Text>
-        </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              styles.titleContainer,
+              pressed && styles.pressed,
+            ]}
+            onPress={handlePress}
+          >
+            <Text style={styles.title}>{year}</Text>
+            <Text style={styles.icon}>{'>'}</Text>
+          </Pressable>
+        </Tooltip>
         <View style={styles.mainContainer}>
           <Text style={styles.title}>{month}</Text>
 

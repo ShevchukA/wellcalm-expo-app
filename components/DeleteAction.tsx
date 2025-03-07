@@ -19,7 +19,7 @@ function DeleteAction({ habitID }: DeleteActionProps) {
   const handleDelete = () => {
     deleteHabit(habitID);
 
-    if (tutorial.step === 2) {
+    if (tutorial.step === 3) {
       nextTutorialStep();
     }
 

@@ -27,7 +27,7 @@ export default function Month() {
     selectHabit(null);
     router.back();
 
-    if (tutorialStep === 1) {
+    if (tutorialStep === 2) {
       nextTutorialStep();
     }
   };

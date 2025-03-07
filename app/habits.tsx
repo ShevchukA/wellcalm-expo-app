@@ -27,7 +27,7 @@ export default function Habits() {
   const handleShowModal = () => {
     toggleModal();
 
-    if (tutorial.step <= 3) {
+    if (tutorial.step <= 4) {
       updateStep('cardAdded', true);
     }
 
@@ -36,7 +36,7 @@ export default function Habits() {
       updateStep('cellMarked', true);
     }
 
-    if (tutorial.step === 3) {
+    if (tutorial.step === 4) {
       nextTutorialStep();
     }
   };
@@ -102,10 +102,9 @@ export default function Habits() {
 
         <View style={styles.footer}>
           <Tooltip
-            isVisible={tutorial.step === 3 && !tutorial.steps.cardAdded}
-            text={'Tap to add\nthe habit'}
-            pointerDirection='down'
-            position={{ left: 38, bottom: 104 }}
+            isVisible={tutorial.step === 4 && !tutorial.steps.cardAdded}
+            text={'Tap to add\na new habit'}
+            position={{ left: 40, bottom: 90 }}
           >
             <AddButton onPress={handleShowModal} />
           </Tooltip>
