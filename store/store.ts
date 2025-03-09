@@ -73,18 +73,14 @@ export const useStore = create<Store>((set) => {
             return habit;
           }
 
-          // Получаем вложенные объекты, если они существуют, иначе создаём пустые
-          const dates = habit.dates ?? {};
+          const updatedDates = { ...(habit.dates ?? {}) };
 
-          let updatedDates = {};
-
-          // Если для данной даты значение отсутствует или false, добавляем со значением true
-          if (!dates[date]) {
-            updatedDates = { ...dates, [date]: true };
+          // Если для данной даты значение отсутствует или false, добавляем со значением true,
+          // иначе удаляем свойство
+          if (!updatedDates[date]) {
+            updatedDates[date] = true;
           } else {
-            // Если значение уже установлено, удаляем свойство
-            const { [date]: removed, ...rest } = dates;
-            updatedDates = rest;
+            delete updatedDates[date];
           }
 
           return { ...habit, dates: updatedDates };

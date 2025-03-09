@@ -23,7 +23,6 @@ export default function TrackerButton({
   const updateStep = useTutorStore((state) => state.updateStep);
 
   const handlePress = () => {
-    const year = date.split('-')[0];
     checkDate(habitId, date);
 
     if (tutorialStep === 0) {

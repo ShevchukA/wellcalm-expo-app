@@ -9,7 +9,7 @@ export type Dates = {
   [date: string]: boolean;
 };
 
-export type CalendarArray = (string | null)[][][];
+export type CalendarArray = (string | null)[][][]; // [months[weeks[days]]]
 
 export type LaunchCounter = {
   count: number;
