@@ -13,7 +13,6 @@ import { SetStateAction, useEffect, useState } from 'react';
 import Button from './Button';
 import { Habit } from '@/models/models';
 import { v4 as generateId } from 'uuid';
-import { getCurrentDate } from '@/utils/getDate';
 import { useStore } from '@/store/store';
 import { useUiStore } from '@/store/uiStore';
 
@@ -34,8 +33,6 @@ export default function Modal({ isVisible }: ModalProps) {
 
   const [name, setName] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
-
-  const { year } = getCurrentDate();
 
   useEffect(() => {
     setName(selectedHabit?.name || '');
