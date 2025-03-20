@@ -10,6 +10,7 @@ import { getCurrentDate } from '@/utils/getDate';
 import { getLongestStreakForMonth } from '@/utils/getStreak';
 import { router } from 'expo-router';
 import { useTutorStore } from '@/store/tutorStore';
+import {useMemo} from "react";
 
 interface CalendarProps {
   habit: Habit;
@@ -29,7 +30,7 @@ export default function Calendar({
   const tutorialStep = useTutorStore((state) => state.tutorial.step);
   const nextTutorialStep = useTutorStore((state) => state.nextStep);
 
-  const { currentISODate } = getCurrentDate();
+  const { currentISODate } = useMemo(() => getCurrentDate(), []);
 
   // Считаем отмеченные дни за месяц
   const checkedDates = countDatesInMonth(habit.dates, year, monthNumber);

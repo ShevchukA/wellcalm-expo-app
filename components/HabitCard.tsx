@@ -9,7 +9,7 @@ import TrackerButton from './TrackerButton';
 import { getCurrentDate } from '@/utils/getDate';
 import { getCurrentWeekDates } from '@/utils/getCurrentWeekDates';
 import { router } from 'expo-router';
-import { useMemo } from 'react';
+import {memo, useMemo} from 'react';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 import { useUiStore } from '@/store/uiStore';
@@ -18,13 +18,15 @@ interface HabitCardProps {
   habit: Habit;
   onLongPress: () => void;
   onPressOut: () => void;
+  isDragging?: boolean;
 }
 
-export default function HabitCard({
+const HabitCard = ({
   habit,
   onLongPress,
   onPressOut,
-}: HabitCardProps) {
+  isDragging = false,
+}: HabitCardProps) => {
   const selectHabit = useStore((state) => state.selectHabit);
   const toggleModal = useUiStore((state) => state.toggleModal);
 
@@ -53,7 +55,7 @@ export default function HabitCard({
 
   return (
     <Pressable
-      style={styles.cardWrapper}
+      style={[styles.cardWrapper, isDragging && styles.cardWrapperDragging]}
       onLongPress={onLongPress}
       onPressOut={onPressOut}
     >
@@ -130,7 +132,10 @@ export default function HabitCard({
       </View>
     </Pressable>
   );
-}
+};
+
+export default HabitCard;
+// export default memo(HabitCard);
 
 const styles = StyleSheet.create({
   cardWrapper: {
@@ -141,6 +146,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
     position: 'relative',
+  },
+  cardWrapperDragging: {
+    shadowOpacity: 0.6,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 4 },
   },
   card: {
     // borderRadius: 20,

@@ -14,6 +14,7 @@ import Tooltip from '@/components/Tooltip';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 import { useUiStore } from '@/store/uiStore';
+import * as Haptics from 'expo-haptics';
 
 export default function Habits() {
   const toggleModal = useUiStore((state) => state.toggleModal);
@@ -26,6 +27,8 @@ export default function Habits() {
 
   const handleShowModal = () => {
     toggleModal();
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
 
     if (tutorial.step <= 4) {
       updateStep('cardAdded', true);
@@ -53,30 +56,42 @@ export default function Habits() {
   }, [habits]);
 
   const renderItem = useCallback((info: DragListRenderItemInfo<Habit>) => {
-    const { item, onDragStart, onDragEnd } = info;
+    const { item, onDragStart, onDragEnd, isActive } = info;
+
+    // TODO: memoize render of the card
+    const onLongPress = () => {
+      onDragStart();
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    }
+    // console.log('renderItem', item.id);
+
     return (
       <SwipeableItem
         key={item.id}
         item={item}
         snapPointsLeft={[66]}
         renderUnderlayLeft={() => <DeleteAction habitID={item.id} />}
+        swipeEnabled={!isActive}
       >
         <HabitCard
-          onLongPress={onDragStart}
+          onLongPress={onLongPress}
           onPressOut={onDragEnd}
           habit={item}
+          isDragging={isActive}
         />
       </SwipeableItem>
     );
   }, []);
 
-  async function onReordered(fromIndex: number, toIndex: number) {
+  const onReordered = useCallback(async (fromIndex: number, toIndex: number) => {
     const newHabits = [...habits];
     const removed = newHabits.splice(fromIndex, 1);
 
     newHabits.splice(toIndex, 0, removed[0]); // Now insert at the new pos
     updateHabits(newHabits);
-  }
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  }, [habits]);
 
   return (
     <View style={styles.screenLayout}>
@@ -91,21 +106,11 @@ export default function Habits() {
 
         <View style={styles.scrollContainer}>
           <DragList
-            style={
-              {
-                // flex: 1,
-                // flexGrow: 1,
-                // borderWidth: 1,
-                // borderColor: 'red',
-              }
-            } // TODO
-            contentContainerStyle={{
-              flexGrow: 1,
-            }} // TODO
+            containerStyle={styles.listContainer}
             ref={listRef}
             data={habits}
-            extraData={habits}
-            keyExtractor={(habit) => habit.id}
+            // extraData={habits}
+            keyExtractor={listKeyExtractor}
             renderItem={renderItem}
             onReordered={onReordered}
             showsVerticalScrollIndicator={false}
@@ -126,12 +131,17 @@ export default function Habits() {
   );
 }
 
+const listKeyExtractor = (item: Habit) => item.id;
+
 const styles = StyleSheet.create({
   screenLayout: {
     flex: 1,
     justifyContent: 'space-between',
     backgroundColor: Colors.mainWhite,
     position: 'relative',
+  },
+  listContainer: {
+    flex: 1,
   },
   header: {
     height: 44,

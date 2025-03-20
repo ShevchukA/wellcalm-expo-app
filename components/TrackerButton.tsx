@@ -4,6 +4,7 @@ import { Colors } from '@/constants/Colors';
 import { checkForAchievement } from '@/utils/checkForAchievement';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
+import {memo} from "react";
 
 interface TrackerButtonProps {
   date: string; // YYYY-MM-DD
@@ -12,12 +13,12 @@ interface TrackerButtonProps {
   habitId: string;
 }
 
-export default function TrackerButton({
+const TrackerButton = ({
   date,
   isCurrentDate,
   isMarked,
   habitId,
-}: TrackerButtonProps) {
+}: TrackerButtonProps) => {
   const checkDate = useStore((state) => state.checkDate);
   const tutorialStep = useTutorStore((state) => state.tutorial.step);
   const nextTutorialStep = useTutorStore((state) => state.nextStep);
@@ -25,7 +26,10 @@ export default function TrackerButton({
 
   const handlePress = () => {
     checkDate(habitId, date);
-    checkForAchievement(habitId);
+
+    if (habitId !== 'tutorial') {
+      checkForAchievement(habitId);
+    }
 
     if (tutorialStep === 0) {
       nextTutorialStep();
@@ -49,6 +53,8 @@ export default function TrackerButton({
     </Pressable>
   );
 }
+
+export default memo(TrackerButton)
 
 const styles = StyleSheet.create({
   wrapper: {
