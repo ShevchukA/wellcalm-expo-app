@@ -11,7 +11,7 @@ import { Colors } from '@/constants/Colors';
 
 interface TooltipProps {
   text: string;
-  pointerDirection: 'top' | 'down';
+  // pointerDirection: 'top' | 'down';
   isVisible: boolean;
   children: ReactNode;
   position: { left?: number; right?: number; top?: number; bottom?: number };
@@ -19,7 +19,7 @@ interface TooltipProps {
 }
 export default function Tooltip({
   text,
-  pointerDirection,
+  // pointerDirection,
   isVisible,
   children,
   position,
@@ -47,11 +47,11 @@ export default function Tooltip({
       {isVisible && (
         <Animated.View style={[styles.position, position, animatedStyle]}>
           <View style={styles.tooltip}>
-            <View
+            {/* <View
               style={
                 pointerDirection === 'top' ? styles.arrowTop : styles.arrowDown
               }
-            />
+            /> */}
             <View style={styles.container}>
               <Text style={styles.text}>{text}</Text>
             </View>
@@ -79,17 +79,17 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   container: {
-    paddingHorizontal: 24,
-    paddingVertical: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 18,
     borderRadius: 20,
-    backgroundColor: Colors.tertiaryWhite,
+    backgroundColor: Colors.white,
   },
   text: {
-    fontFamily: 'Afacad-Regular',
-    fontSize: 16,
-    lineHeight: 16,
+    fontFamily: 'Afacad-SemiBold',
+    fontSize: 14,
+    lineHeight: 15,
     textAlign: 'center',
-    color: Colors.black,
+    color: Colors.tertiaryBlue,
   },
   arrowTop: {
     position: 'absolute',

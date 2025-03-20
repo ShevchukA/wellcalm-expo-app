@@ -1,16 +1,20 @@
-import { Colors, HabitsColors } from '@/constants/Colors';
+import DragList, { DragListRenderItemInfo } from 'react-native-draglist';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useEffect, useRef } from 'react';
 
 import AddButton from '@/components/AddButton';
+import { Colors } from '@/constants/Colors';
 import DeleteAction from '@/components/DeleteAction';
+import { Habit } from '@/models/models';
 import HabitCard from '@/components/HabitCard';
 import Modal from '@/components/Modal';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import SwipeableItem from 'react-native-swipeable-item';
 import { Toast } from '@/components/Toast';
 import Tooltip from '@/components/Tooltip';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 import { useUiStore } from '@/store/uiStore';
+import * as Haptics from 'expo-haptics';
 
 export default function Habits() {
   const toggleModal = useUiStore((state) => state.toggleModal);
@@ -19,11 +23,14 @@ export default function Habits() {
   const tutorial = useTutorStore((state) => state.tutorial);
   const nextTutorialStep = useTutorStore((state) => state.nextStep);
   const updateStep = useTutorStore((state) => state.updateStep);
+  const updateHabits = useStore((state) => state.updateHabits);
 
   const handleShowModal = () => {
     toggleModal();
 
-    if (tutorial.step <= 3) {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+
+    if (tutorial.step <= 4) {
       updateStep('cardAdded', true);
     }
 
@@ -32,10 +39,59 @@ export default function Habits() {
       updateStep('cellMarked', true);
     }
 
-    if (tutorial.step === 3) {
+    if (tutorial.step === 4) {
       nextTutorialStep();
     }
   };
+
+  const listRef = useRef<any>(null);
+  const prevHabitsLength = useRef<number>(habits.length);
+
+  // При добавлении элемента, прокручиваем список в конец
+  useEffect(() => {
+    if (habits.length > prevHabitsLength.current && listRef.current) {
+      listRef.current.scrollToEnd({ animated: true });
+    }
+    prevHabitsLength.current = habits.length;
+  }, [habits]);
+
+  const renderItem = useCallback((info: DragListRenderItemInfo<Habit>) => {
+    const { item, onDragStart, onDragEnd, isActive } = info;
+
+    // TODO: memoize render of the card
+    const onLongPress = () => {
+      onDragStart();
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    }
+    // console.log('renderItem', item.id);
+
+    return (
+      <SwipeableItem
+        key={item.id}
+        item={item}
+        snapPointsLeft={[66]}
+        renderUnderlayLeft={() => <DeleteAction habitID={item.id} />}
+        swipeEnabled={!isActive}
+      >
+        <HabitCard
+          onLongPress={onLongPress}
+          onPressOut={onDragEnd}
+          habit={item}
+          isDragging={isActive}
+        />
+      </SwipeableItem>
+    );
+  }, []);
+
+  const onReordered = useCallback(async (fromIndex: number, toIndex: number) => {
+    const newHabits = [...habits];
+    const removed = newHabits.splice(fromIndex, 1);
+
+    newHabits.splice(toIndex, 0, removed[0]); // Now insert at the new pos
+    updateHabits(newHabits);
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  }, [habits]);
 
   return (
     <View style={styles.screenLayout}>
@@ -48,26 +104,24 @@ export default function Habits() {
           <Text style={styles.title}>YOUR HABITS</Text>
         </View>
 
-        <SwipeListView
-          data={habits}
-          keyExtractor={(habit) => habit.id}
-          renderItem={(data) => (
-            <HabitCard
-              habit={data.item}
-              color={HabitsColors[data.index % HabitsColors.length]}
-            />
-          )}
-          renderHiddenItem={(data) => <DeleteAction habitID={data.item.id} />}
-          rightOpenValue={-66}
-          showsVerticalScrollIndicator={false}
-        />
+        <View style={styles.scrollContainer}>
+          <DragList
+            containerStyle={styles.listContainer}
+            ref={listRef}
+            data={habits}
+            // extraData={habits}
+            keyExtractor={listKeyExtractor}
+            renderItem={renderItem}
+            onReordered={onReordered}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
 
         <View style={styles.footer}>
           <Tooltip
-            isVisible={tutorial.step === 3 && !tutorial.steps.cardAdded}
-            text={'Tap to add\nthe habit'}
-            pointerDirection='down'
-            position={{ left: 38, bottom: 104 }}
+            isVisible={tutorial.step === 4 && !tutorial.steps.cardAdded}
+            text={'Tap to add\na new habit'}
+            position={{ left: 40, bottom: 90 }}
           >
             <AddButton onPress={handleShowModal} />
           </Tooltip>
@@ -77,12 +131,17 @@ export default function Habits() {
   );
 }
 
+const listKeyExtractor = (item: Habit) => item.id;
+
 const styles = StyleSheet.create({
   screenLayout: {
     flex: 1,
     justifyContent: 'space-between',
     backgroundColor: Colors.mainWhite,
     position: 'relative',
+  },
+  listContainer: {
+    flex: 1,
   },
   header: {
     height: 44,

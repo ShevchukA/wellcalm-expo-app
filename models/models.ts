@@ -1,14 +1,15 @@
 export type Habit = {
   id: string;
   name: string;
+  color: string;
   dates: Dates;
 };
 
 export type Dates = {
-  [year: string]: { [month: string]: { [day: string]: boolean } };
+  [date: string]: boolean;
 };
 
-export type CalendarArray = (string | null)[][][];
+export type CalendarArray = (string | null)[][][]; // [months[weeks[days]]]
 
 export type LaunchCounter = {
   count: number;

@@ -7,10 +7,12 @@ interface UiStore {
   toastTitle: string;
   toastText: string;
   timeoutId: number | null;
+  achievements: { [id: string]: { [name: string]: boolean } };
 
   toggleModal: () => void;
   setToastTitle: (title: string) => void;
   hideToast: () => void;
+  addAchievement: (id: string, achievement: string) => void;
 }
 export const useUiStore = create<UiStore>((set, get) => ({
   isModalOpen: false,
@@ -18,6 +20,7 @@ export const useUiStore = create<UiStore>((set, get) => ({
   toastTitle: '',
   toastText: 'Keep going!',
   timeoutId: null,
+  achievements: {},
 
   toggleModal: () => set((state) => ({ isModalOpen: !state.isModalOpen })),
 
@@ -29,7 +32,7 @@ export const useUiStore = create<UiStore>((set, get) => ({
 
     const id = setTimeout(() => {
       get().hideToast();
-    }, 2500) as unknown as number; // Приведение типа зависит от окружения (NodeJS или браузер)
+    }, 4000) as unknown as number; // Приведение типа зависит от окружения (NodeJS или браузер)
 
     const toastText = PHRASES[Math.floor(Math.random() * PHRASES.length)];
     set({ toastTitle, toastText, timeoutId: id, isToastVisible: true });
@@ -43,5 +46,15 @@ export const useUiStore = create<UiStore>((set, get) => ({
       }
 
       return { isToastVisible: false, timeoutId: null };
+    }),
+
+  addAchievement: (id, achievement) =>
+    set((state) => {
+      const newAchievements = {
+        ...state.achievements,
+        [id]: { ...state.achievements[id], [achievement]: true },
+      };
+
+      return { achievements: newAchievements };
     }),
 }));

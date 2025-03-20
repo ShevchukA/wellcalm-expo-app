@@ -5,7 +5,6 @@ import { Habit } from '@/models/models';
 import { MONTHS } from '@/constants/Months';
 import { countDatesInYear } from '@/utils/countDays';
 import { getDatesOfMonth } from '@/utils/getDatesOfMonth';
-import { getLongestStreakForYear } from '@/utils/getStreak';
 
 interface YearListProps {
   habit: Habit;
@@ -15,7 +14,6 @@ interface YearListProps {
 export default function YearList({ habit, year }: YearListProps) {
   // Считаем отмеченные дни за год
   const checkedDates = countDatesInYear(habit.dates, year);
-  const streak = getLongestStreakForYear(habit.dates, year);
 
   return (
     <View style={styles.wrapper}>
@@ -32,7 +30,7 @@ export default function YearList({ habit, year }: YearListProps) {
                   <Text style={styles.month}>{month}</Text>
                   <View style={styles.daysContainer}>
                     {days.map((day) => {
-                      const isMarked = habit.dates?.[year]?.[month]?.[day];
+                      const isMarked = habit.dates?.[day];
                       return (
                         <View
                           key={day}
@@ -49,11 +47,7 @@ export default function YearList({ habit, year }: YearListProps) {
           <View style={styles.separator} />
           <View style={styles.infoContainer}>
             <Text style={styles.title}>Total per year</Text>
-            <Text style={styles.text}>{checkedDates} days</Text>
-          </View>
-          <View style={styles.infoContainer}>
-            <Text style={styles.title}>Best streak</Text>
-            <Text style={styles.markedText}>{streak} days</Text>
+            <Text style={styles.markedText}>{checkedDates} days</Text>
           </View>
         </View>
       </View>
@@ -89,10 +83,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.white,
     paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 66,
+    paddingTop: 12,
+    paddingBottom: 24,
   },
-  yearContainer: { gap: 12 },
+  yearContainer: { gap: 9 },
   monthContainer: {
     gap: 4,
   },
@@ -129,7 +123,8 @@ const styles = StyleSheet.create({
   separator: {
     borderTopWidth: 1,
     borderColor: Colors.pink,
-    marginVertical: 16,
+    marginTop: 24,
+    marginBottom: 9,
   },
   infoContainer: {
     flexDirection: 'row',

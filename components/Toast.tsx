@@ -10,6 +10,7 @@ import { Colors } from '@/constants/Colors';
 import IconLightning from '../assets/icons/lightning.svg';
 import { useEffect } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import * as Haptics from "expo-haptics";
 
 export function Toast() {
   const marginTop = useSharedValue(-100);
@@ -24,6 +25,8 @@ export function Toast() {
         damping: 15,
         stiffness: 200,
       });
+
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     } else {
       marginTop.value = withTiming(-100, { duration: 300 });
     }

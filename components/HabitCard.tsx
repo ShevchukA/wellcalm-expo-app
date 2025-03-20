@@ -1,5 +1,4 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useEffect, useMemo } from 'react';
 
 import { Colors } from '@/constants/Colors';
 import DaysOfWeek from './DaysOfWeek';
@@ -7,28 +6,32 @@ import { Habit } from '@/models/models';
 import IconPencil from '../assets/icons/pencil.svg';
 import Tooltip from './Tooltip';
 import TrackerButton from './TrackerButton';
-import { checkForAchievement } from '@/utils/checkForAchievement';
 import { getCurrentDate } from '@/utils/getDate';
 import { getCurrentWeekDates } from '@/utils/getCurrentWeekDates';
 import { router } from 'expo-router';
+import {memo, useMemo} from 'react';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 import { useUiStore } from '@/store/uiStore';
 
 interface HabitCardProps {
   habit: Habit;
-  color: string;
+  onLongPress: () => void;
+  onPressOut: () => void;
+  isDragging?: boolean;
 }
 
-export default function HabitCard({ habit, color }: HabitCardProps) {
+const HabitCard = ({
+  habit,
+  onLongPress,
+  onPressOut,
+  isDragging = false,
+}: HabitCardProps) => {
   const selectHabit = useStore((state) => state.selectHabit);
   const toggleModal = useUiStore((state) => state.toggleModal);
 
   const tutorialStep = useTutorStore((state) => state.tutorial.step);
-
-  useEffect(() => {
-    checkForAchievement(habit);
-  }, [habit]);
+  const nextTutorialStep = useTutorStore((state) => state.nextStep);
 
   const handleEdit = () => {
     selectHabit(habit.id);
@@ -37,19 +40,25 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
 
   const handleOpenCalendar = () => {
     selectHabit(habit.id);
+
+    if (tutorialStep === 1) {
+      nextTutorialStep();
+    }
+
     router.navigate('/month');
   };
 
-  const { year, month, date, currentFullDate } = useMemo(
-    () => getCurrentDate(),
-    []
-  );
+  const { year, month, currentISODate } = useMemo(() => getCurrentDate(), []);
   const currentWeekDates = useMemo(() => getCurrentWeekDates(), []);
 
   const isTutorCard = habit.id === 'tutorial';
 
   return (
-    <View style={styles.cardWrapper}>
+    <Pressable
+      style={[styles.cardWrapper, isDragging && styles.cardWrapperDragging]}
+      onLongPress={onLongPress}
+      onPressOut={onPressOut}
+    >
       {isTutorCard && (
         <View style={styles.tutorContainer}>
           <Text style={styles.tutorLabel}>how about new habit?</Text>
@@ -58,15 +67,14 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
 
       <View style={[styles.card]}>
         <Tooltip
-          isVisible={tutorialStep === 2 && isTutorCard}
-          text={'Swipe left\nto delete'}
-          pointerDirection='top'
-          position={{ left: 226, top: 120 }}
+          isVisible={tutorialStep === 3 && isTutorCard}
+          text={'Swipe card left to delete'}
+          position={{ left: 170, top: 176 }}
         >
           <View
             style={[
               styles.titleContainer,
-              { backgroundColor: color },
+              { backgroundColor: habit.color },
               isTutorCard && styles.tutorCard,
             ]}
           >
@@ -80,9 +88,8 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
         <View style={styles.trackerContainer}>
           <Tooltip
             isVisible={tutorialStep === 1 && isTutorCard}
-            text={'Tap to open the full\ncalendar'}
-            pointerDirection='top'
-            position={{ left: 90, top: 66 }}
+            text={'Tap on the month\nto open full calendar'}
+            position={{ left: 0, top: 50 }}
           >
             <Pressable
               style={({ pressed }) => [
@@ -104,28 +111,17 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
             <Tooltip
               isVisible={tutorialStep === 0 && isTutorCard}
               text={'Tap to mark the day,\ntap to unmark'}
-              pointerDirection='top'
-              position={{ left: 26, top: 72 }}
+              position={{ left: 50, top: 46 }}
             >
               <View style={styles.datesContainer}>
                 {currentWeekDates.map((weekDate: string) => {
-                  const weekDateNumber = weekDate.split('-')[2];
-                  const weekDateMonth = weekDate.split('-')[1];
-                  const weekDateYear = weekDate.split('-')[0];
-                  const isMarked =
-                    habit.dates?.[weekDateYear]?.[weekDateMonth]?.[
-                      weekDateNumber
-                    ];
-
                   return (
                     <TrackerButton
                       key={weekDate}
                       habitId={habit.id}
-                      year={weekDateYear}
-                      month={weekDateMonth}
-                      date={weekDateNumber}
-                      isMarked={isMarked}
-                      isCurrentDate={weekDate === currentFullDate}
+                      date={weekDate}
+                      isMarked={habit.dates?.[weekDate]}
+                      isCurrentDate={weekDate === currentISODate}
                     />
                   );
                 })}
@@ -134,9 +130,12 @@ export default function HabitCard({ habit, color }: HabitCardProps) {
           </View>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
-}
+};
+
+export default HabitCard;
+// export default memo(HabitCard);
 
 const styles = StyleSheet.create({
   cardWrapper: {
@@ -147,6 +146,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
     position: 'relative',
+  },
+  cardWrapperDragging: {
+    shadowOpacity: 0.6,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 4 },
   },
   card: {
     // borderRadius: 20,

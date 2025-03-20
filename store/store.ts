@@ -11,15 +11,11 @@ export interface Store {
   habits: Habit[];
   selectedHabitId: string | null;
   loadHabitsFromAsyncStore: () => void;
+  updateHabits: (newHabits: Habit[]) => void;
   addHabit: (habit: Habit) => void;
   deleteHabit: (id: string) => void;
   editHabitName: (id: string, newName: string) => void;
-  checkDate: (
-    habitId: string,
-    year: string,
-    month: string,
-    date: string
-  ) => void;
+  checkDate: (habitId: string, date: string) => void;
   selectHabit: (habitId: string | null) => void;
 }
 
@@ -36,6 +32,12 @@ export const useStore = create<Store>((set) => {
         set(() => ({ habits: newHabits }));
       }
     },
+
+    updateHabits: (newHabits: Habit[]) =>
+      set(() => {
+        setAsyncStorageData('habits', newHabits);
+        return { habits: newHabits };
+      }),
 
     addHabit: (newHabit) => {
       set((state) => {
@@ -64,30 +66,22 @@ export const useStore = create<Store>((set) => {
         return { habits: newHabits };
       }),
 
-    checkDate: (habitId, year, month, date) =>
+    checkDate: (habitId, date) =>
       set((state) => {
         const newHabits = state.habits.map((habit) => {
           if (habit.id !== habitId) {
             return habit;
           }
 
-          // Получаем вложенные объекты, если они существуют, иначе создаём пустые
-          const yearObj = habit.dates[year] ?? {};
-          const monthObj = yearObj[month] ?? {};
+          const updatedDates = { ...(habit.dates ?? {}) };
 
-          let updatedMonth: { [date: string]: boolean };
-
-          // Если для данной даты значение отсутствует или false, добавляем со значением true
-          if (!monthObj[date]) {
-            updatedMonth = { ...monthObj, [date]: true };
+          // Если для данной даты значение отсутствует или false, добавляем со значением true,
+          // иначе удаляем свойство
+          if (!updatedDates[date]) {
+            updatedDates[date] = true;
           } else {
-            // Если значение уже установлено, удаляем свойство
-            const { [date]: removed, ...rest } = monthObj;
-            updatedMonth = rest;
+            delete updatedDates[date];
           }
-
-          const updatedYear = { ...yearObj, [month]: updatedMonth };
-          const updatedDates = { ...habit.dates, [year]: updatedYear };
 
           return { ...habit, dates: updatedDates };
         });

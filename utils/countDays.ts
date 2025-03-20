@@ -2,20 +2,20 @@ import { Dates } from '@/models/models';
 
 export function countDatesInMonth(
   dates: Dates,
-  year: string,
-  month: string
+  year: string, // 2025
+  monthNumber: string // 05
 ): number {
-  const countingMonth = dates?.[year]?.[month] ?? {};
-  return Object.keys(countingMonth).length;
+  const markedDates = Object.keys(dates).filter((date) =>
+    date.startsWith(`${year}-${monthNumber}`)
+  );
+
+  return markedDates.length;
 }
 
 export function countDatesInYear(dates: Dates, year: string): number {
-  const countingYear = dates?.[year] ?? {};
-  let count = 0;
+  const markedDates = Object.keys(dates).filter((date) =>
+    date.startsWith(year)
+  );
 
-  for (const month in countingYear) {
-    count += Object.keys(countingYear[month]).length;
-  }
-
-  return count;
+  return markedDates.length;
 }

@@ -3,48 +3,66 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import DaysOfWeek from './DaysOfWeek';
 import { Habit } from '@/models/models';
-import { MONTHS } from '@/constants/Months';
+import Tooltip from './Tooltip';
 import TrackerButton from './TrackerButton';
 import { countDatesInMonth } from '@/utils/countDays';
 import { getCurrentDate } from '@/utils/getDate';
 import { getLongestStreakForMonth } from '@/utils/getStreak';
 import { router } from 'expo-router';
-import { useStore } from '@/store/store';
+import { useTutorStore } from '@/store/tutorStore';
+import {useMemo} from "react";
 
 interface CalendarProps {
   habit: Habit;
   year: string;
   month: string;
+  monthNumber: string;
+  weeks: (string | null)[][];
 }
 
-export default function Calendar({ year, month, habit }: CalendarProps) {
-  const { currentFullDate } = getCurrentDate();
-  const monthIndex = MONTHS.findIndex((monthName) => monthName === month);
+export default function Calendar({
+  year,
+  month,
+  monthNumber,
+  weeks,
+  habit,
+}: CalendarProps) {
+  const tutorialStep = useTutorStore((state) => state.tutorial.step);
+  const nextTutorialStep = useTutorStore((state) => state.nextStep);
 
-  const calendar = useStore((state) => state.calendar);
-  const weeks = calendar[monthIndex];
+  const { currentISODate } = useMemo(() => getCurrentDate(), []);
 
   // Считаем отмеченные дни за месяц
-  const checkedDates = countDatesInMonth(habit.dates, year, month);
-  const streak = getLongestStreakForMonth(habit.dates, year, month);
+  const checkedDates = countDatesInMonth(habit.dates, year, monthNumber);
+  const streak = getLongestStreakForMonth(habit.dates, year, monthNumber);
 
   const handlePress = () => {
+    if (tutorialStep === 2) {
+      nextTutorialStep();
+    }
+
     router.navigate('/year');
   };
 
   return (
     <View style={styles.wrapper}>
       <View style={styles.card}>
-        <Pressable
-          style={({ pressed }) => [
-            styles.titleContainer,
-            pressed && styles.pressed,
-          ]}
-          onPress={handlePress}
+        <Tooltip
+          isVisible={tutorialStep === 2}
+          text={'Tap on the year\nto open annual statistics'}
+          position={{ left: 10, top: 50 }}
         >
-          <Text style={styles.title}>{year}</Text>
-          <Text style={styles.icon}>{'>'}</Text>
-        </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              styles.titleContainer,
+              pressed && styles.pressed,
+            ]}
+            onPress={handlePress}
+          >
+            <Text style={styles.title}>{year}</Text>
+            <Text style={styles.icon}>{'>'}</Text>
+          </Pressable>
+        </Tooltip>
         <View style={styles.mainContainer}>
           <Text style={styles.title}>{month}</Text>
 
@@ -54,17 +72,13 @@ export default function Calendar({ year, month, habit }: CalendarProps) {
               <View key={i} style={styles.week}>
                 {week.map((date, i) => {
                   if (date) {
-                    const isMarked = habit.dates?.[year]?.[month]?.[date];
-                    const fullDate = `${year}-${month}-${date}`;
                     return (
                       <TrackerButton
                         key={i}
                         habitId={habit.id}
-                        year={year}
-                        month={month}
                         date={date}
-                        isCurrentDate={fullDate === currentFullDate}
-                        isMarked={isMarked}
+                        isCurrentDate={date === currentISODate}
+                        isMarked={habit.dates?.[date]}
                       />
                     );
                   } else {

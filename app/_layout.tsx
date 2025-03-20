@@ -1,5 +1,6 @@
 import { SplashScreen, Stack } from 'expo-router';
 
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { checkAndPromptReview } from '@/utils/checkAndPromptReview';
 import { manageNotifications } from '@/utils/manageNotifications';
 import { useEffect } from 'react';
@@ -29,6 +30,7 @@ export default function RootLayout() {
   );
 
   useEffect(() => {
+    // TODO
     loadHabitsFromAsyncStore();
     loadTutorialFromAsyncStore();
     checkAndPromptReview();
@@ -46,11 +48,13 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Screen name='index' options={{ headerShown: false }} />
-      <Stack.Screen name='habits' options={{ headerShown: false }} />
-      <Stack.Screen name='month' options={{ headerShown: false }} />
-      <Stack.Screen name='year' options={{ headerShown: false }} />
-    </Stack>
+    <GestureHandlerRootView>
+      <Stack>
+        <Stack.Screen name='index' options={{ headerShown: false }} />
+        <Stack.Screen name='habits' options={{ headerShown: false }} />
+        <Stack.Screen name='month' options={{ headerShown: false }} />
+        <Stack.Screen name='year' options={{ headerShown: false }} />
+      </Stack>
+    </GestureHandlerRootView>
   );
 }
