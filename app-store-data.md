@@ -2,6 +2,10 @@
 
 Wellcalm
 
+# Subtitle
+
+Track habits to calm and focus
+
 # support:
 
 wellcalm-support.netlify.app
@@ -12,7 +16,7 @@ wellcalm-support.netlify.app
 
 # keywords:
 
-habit tracker, habit app, daily habits, progress tracking, habit building, productivity, motivation, routine tracker, habit statistics, self-improvement, goal setting, lifestyle change, wellness, habit formation, habit planner
+habit,tracker,progress,productivity,motivation,routine,self-improvement,goals,wellness,planner
 
 # description:
 
