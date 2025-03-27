@@ -18,7 +18,7 @@ export default function YearList({ habit, year }: YearListProps) {
   return (
     <View style={styles.wrapper}>
       <View style={styles.card}>
-        <View style={styles.titleContainer}>
+        <View style={[styles.titleContainer, { backgroundColor: habit.color }]}>
           <Text style={styles.title}>{year}</Text>
         </View>
         <View style={styles.mainContainer}>
@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     paddingHorizontal: 16,
-    backgroundColor: Colors.pink,
   },
   title: {
     fontFamily: 'Afacad-Semibold',

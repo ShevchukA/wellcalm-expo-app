@@ -9,8 +9,8 @@ import { countDatesInMonth } from '@/utils/countDays';
 import { getCurrentDate } from '@/utils/getDate';
 import { getLongestStreakForMonth } from '@/utils/getStreak';
 import { router } from 'expo-router';
+import { useMemo } from 'react';
 import { useTutorStore } from '@/store/tutorStore';
-import {useMemo} from "react";
 
 interface CalendarProps {
   habit: Habit;
@@ -56,6 +56,7 @@ export default function Calendar({
             style={({ pressed }) => [
               styles.titleContainer,
               pressed && styles.pressed,
+              { backgroundColor: habit.color },
             ]}
             onPress={handlePress}
           >
@@ -122,7 +123,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     paddingHorizontal: 16,
-    backgroundColor: Colors.pink,
   },
   title: {
     fontFamily: 'Afacad-Semibold',
