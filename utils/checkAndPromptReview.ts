@@ -1,5 +1,6 @@
+import * as StoreReview from 'expo-store-review';
+
 import { LaunchCounter } from '@/models/models';
-import StoreReview from 'expo-store-review';
 import { getAsyncStorageData } from '@/utils/getAsyncStorageData';
 import { setAsyncStorageData } from '@/utils/setAsyncStorageData';
 
