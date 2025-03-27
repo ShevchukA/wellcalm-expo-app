@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   calendarSpacer: {
-    width: 44,
+    flex: 1,
     height: 44,
   },
   separator: {

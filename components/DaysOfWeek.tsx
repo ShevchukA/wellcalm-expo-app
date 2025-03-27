@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   weekDay: {
-    width: 44,
+    flex: 1,
     fontFamily: 'Afacad-SemiBold',
     fontSize: 13,
     color: '#3C3C434D',

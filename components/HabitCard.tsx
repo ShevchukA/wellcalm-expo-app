@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { memo, useMemo } from 'react';
 
 import { Colors } from '@/constants/Colors';
 import DaysOfWeek from './DaysOfWeek';
@@ -9,7 +10,6 @@ import TrackerButton from './TrackerButton';
 import { getCurrentDate } from '@/utils/getDate';
 import { getCurrentWeekDates } from '@/utils/getCurrentWeekDates';
 import { router } from 'expo-router';
-import {memo, useMemo} from 'react';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 import { useUiStore } from '@/store/uiStore';
@@ -114,15 +114,30 @@ const HabitCard = ({
               position={{ left: 50, top: 46 }}
             >
               <View style={styles.datesContainer}>
-                {currentWeekDates.map((weekDate: string) => {
+                {currentWeekDates.map((weekDate: string, i) => {
+                  // определяем состояние соседних ячеек, чтобы сделать заливку между соседними
+                  const isCurrentMarked = habit.dates?.[currentWeekDates[i]];
+                  const isPreviousMarked =
+                    habit.dates?.[currentWeekDates[i - 1]];
+                  const isNextMarked = habit.dates?.[currentWeekDates[i + 1]];
+
                   return (
-                    <TrackerButton
-                      key={weekDate}
-                      habitId={habit.id}
-                      date={weekDate}
-                      isMarked={habit.dates?.[weekDate]}
-                      isCurrentDate={weekDate === currentISODate}
-                    />
+                    <View style={styles.trackerButtonWrapper} key={weekDate}>
+                      {isCurrentMarked && (
+                        <View
+                          style={[
+                            styles.fillingDefault,
+                            getFillingStyle(isPreviousMarked, isNextMarked),
+                          ]}
+                        />
+                      )}
+                      <TrackerButton
+                        habitId={habit.id}
+                        date={weekDate}
+                        isMarked={isCurrentMarked}
+                        isCurrentDate={weekDate === currentISODate}
+                      />
+                    </View>
                   );
                 })}
               </View>
@@ -136,6 +151,19 @@ const HabitCard = ({
 
 export default HabitCard;
 // export default memo(HabitCard);
+
+const getFillingStyle = (isPreviousMarked: boolean, isNextMarked: boolean) => {
+  if (isPreviousMarked && isNextMarked) {
+    return styles.fillingFull;
+  }
+  if (isNextMarked) {
+    return styles.fillingNext;
+  }
+  if (isPreviousMarked) {
+    return styles.fillingPrevious;
+  }
+  return styles.fillingDefault;
+};
 
 const styles = StyleSheet.create({
   cardWrapper: {
@@ -188,6 +216,32 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+  },
+  trackerButtonWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  fillingDefault: {
+    position: 'absolute',
+    backgroundColor: Colors.lightGreen,
+    top: 3,
+    height: 38,
+  },
+  fillingNext: {
+    width: '50%',
+    right: 0,
+  },
+  fillingPrevious: {
+    width: '50%',
+    left: 0,
+  },
+  fillingFull: {
+    width: '100%',
+    left: 0,
+    right: 0,
   },
   linkContainer: {
     height: 44,

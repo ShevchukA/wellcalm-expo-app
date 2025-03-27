@@ -2,9 +2,9 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Colors } from '@/constants/Colors';
 import { checkForAchievement } from '@/utils/checkForAchievement';
+import { memo } from 'react';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
-import {memo} from "react";
 
 interface TrackerButtonProps {
   date: string; // YYYY-MM-DD
@@ -38,32 +38,41 @@ const TrackerButton = ({
   };
 
   return (
-    <Pressable style={styles.wrapper} onPress={handlePress}>
-      <View style={[styles.button, isMarked && styles.marked]}>
-        <Text
-          style={[
-            styles.date,
-            isCurrentDate && styles.currentDate,
-            isMarked && isCurrentDate && styles.currentMarkedDate,
-          ]}
-        >
-          {date.split('-')[2]}
-        </Text>
-      </View>
-    </Pressable>
+    <View style={styles.wrapper}>
+      <Pressable style={styles.button} onPress={handlePress}>
+        <View style={[styles.marker, isMarked && styles.marked]}>
+          <Text
+            style={[
+              styles.date,
+              isCurrentDate && styles.currentDate,
+              isMarked && isCurrentDate && styles.currentMarkedDate,
+            ]}
+          >
+            {date.split('-')[2]}
+          </Text>
+        </View>
+      </Pressable>
+    </View>
   );
-}
+};
 
-export default memo(TrackerButton)
+export default memo(TrackerButton);
 
 const styles = StyleSheet.create({
   wrapper: {
-    width: 44,
+    flex: 1,
     height: 44,
     justifyContent: 'center',
     alignContent: 'center',
   },
   button: {
+    height: 44,
+    width: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  marker: {
     height: 38,
     width: 38,
     backgroundColor: Colors.lightGrey,
