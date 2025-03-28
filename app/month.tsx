@@ -1,5 +1,6 @@
 import { MONTHS, MONTHS_NUMBERS } from '@/constants/Months';
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
 
 import Calendar from '../components/Calendar';
 import CarouselIndicator from '@/components/CarouselIndicator';
@@ -10,7 +11,6 @@ import { getCurrentDate } from '@/utils/getDate';
 import { router } from 'expo-router';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
-import {useCallback, useMemo, useState} from "react";
 
 export default function Month() {
   const selectHabit = useStore((state) => state.selectHabit);
@@ -60,7 +60,9 @@ export default function Month() {
           >
             {MONTHS.map((month, i) => {
               if (Math.abs(viewingPageIndex - i) > 1) {
-                return <View style={{height: 554, width: '100%'}} key={month} />; // TODO: check 554 height
+                return (
+                  <View style={{ height: 554, width: '100%' }} key={month} />
+                ); // TODO: check 554 height
               }
 
               // TODO: memoize calendar to avoid 3x rerendering
@@ -73,7 +75,7 @@ export default function Month() {
                   weeks={calendar[i]}
                   habit={selectedHabit}
                 />
-              )
+              );
             })}
           </PagerView>
         )}
@@ -118,8 +120,6 @@ const styles = StyleSheet.create({
     color: Colors.tertiaryBlue,
   },
   carouselContainer: {
-    // borderWidth: 1,
-    // flex: 1,
     height: 554, // TODO ?
     justifyContent: 'flex-start',
     alignItems: 'center',

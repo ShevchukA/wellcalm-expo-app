@@ -1,4 +1,4 @@
-import 'react-native-get-random-values'; // TODO куда лучше поместить? необходима для работы uuid
+import 'react-native-get-random-values';
 
 import { Colors, HabitsColors } from '@/constants/Colors';
 import {

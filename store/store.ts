@@ -19,7 +19,6 @@ export interface Store {
   selectHabit: (habitId: string | null) => void;
 }
 
-// TODO: is it a good idea to operate with local store from my app store?
 export const useStore = create<Store>((set) => {
   return {
     calendar: createCalendar(),
@@ -35,6 +34,7 @@ export const useStore = create<Store>((set) => {
 
     updateHabits: (newHabits: Habit[]) =>
       set(() => {
+        // TODO: use middleware to persist or useStore.subscribe
         setAsyncStorageData('habits', newHabits);
         return { habits: newHabits };
       }),
