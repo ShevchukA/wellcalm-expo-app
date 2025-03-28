@@ -1,3 +1,5 @@
+import * as Haptics from 'expo-haptics';
+
 import DragList, { DragListRenderItemInfo } from 'react-native-draglist';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useCallback, useEffect, useRef } from 'react';
@@ -14,7 +16,6 @@ import Tooltip from '@/components/Tooltip';
 import { useStore } from '@/store/store';
 import { useTutorStore } from '@/store/tutorStore';
 import { useUiStore } from '@/store/uiStore';
-import * as Haptics from 'expo-haptics';
 
 export default function Habits() {
   const toggleModal = useUiStore((state) => state.toggleModal);
@@ -62,7 +63,7 @@ export default function Habits() {
     const onLongPress = () => {
       onDragStart();
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-    }
+    };
     // console.log('renderItem', item.id);
 
     return (
@@ -83,15 +84,18 @@ export default function Habits() {
     );
   }, []);
 
-  const onReordered = useCallback(async (fromIndex: number, toIndex: number) => {
-    const newHabits = [...habits];
-    const removed = newHabits.splice(fromIndex, 1);
+  const onReordered = useCallback(
+    async (fromIndex: number, toIndex: number) => {
+      const newHabits = [...habits];
+      const removed = newHabits.splice(fromIndex, 1);
 
-    newHabits.splice(toIndex, 0, removed[0]); // Now insert at the new pos
-    updateHabits(newHabits);
+      newHabits.splice(toIndex, 0, removed[0]); // Now insert at the new pos
+      updateHabits(newHabits);
 
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-  }, [habits]);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    },
+    [habits]
+  );
 
   return (
     <View style={styles.screenLayout}>
@@ -118,13 +122,7 @@ export default function Habits() {
         </View>
 
         <View style={styles.footer}>
-          <Tooltip
-            isVisible={tutorial.step === 4 && !tutorial.steps.cardAdded}
-            text={'Tap to add\na new habit'}
-            position={{ left: 40, bottom: 90 }}
-          >
-            <AddButton onPress={handleShowModal} />
-          </Tooltip>
+          <AddButton onPress={handleShowModal} />
         </View>
       </SafeAreaView>
     </View>
@@ -157,10 +155,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   footer: {
-    height: 106,
-    justifyContent: 'center',
+    height: 84,
     alignItems: 'center',
-    paddingTop: 6,
+    paddingTop: 18,
   },
   spacer: {
     height: 14,

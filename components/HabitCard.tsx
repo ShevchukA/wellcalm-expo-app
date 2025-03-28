@@ -69,7 +69,7 @@ const HabitCard = ({
         <Tooltip
           isVisible={tutorialStep === 3 && isTutorCard}
           text={'Swipe card left to delete'}
-          position={{ left: 170, top: 176 }}
+          position={{ left: 170, top: 120 }}
         >
           <View
             style={[
@@ -111,7 +111,7 @@ const HabitCard = ({
             <Tooltip
               isVisible={tutorialStep === 0 && isTutorCard}
               text={'Tap to mark the day,\ntap to unmark'}
-              position={{ left: 50, top: 46 }}
+              position={{ left: 66, top: 50 }}
             >
               <View style={styles.datesContainer}>
                 {currentWeekDates.map((weekDate: string, i) => {

@@ -30,7 +30,6 @@ export default function RootLayout() {
   );
 
   useEffect(() => {
-    // TODO
     loadHabitsFromAsyncStore();
     loadTutorialFromAsyncStore();
     checkAndPromptReview();
